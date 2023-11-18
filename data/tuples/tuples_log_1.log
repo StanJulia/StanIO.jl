@@ -1,11 +1,5 @@
 method = sample (Default)
   sample
-    num_samples = 1000 (Default)
-    num_warmup = 1000 (Default)
-    save_warmup = 0 (Default)
-    thin = 1 (Default)
-    adapt
-      engaged = 1 (Default)
 method = sample (Default)
   sample
     num_samples = 1000 (Default)
@@ -19,62 +13,42 @@ method = sample (Default)
       kappa = 0.750000 (Default)
       t0 = 10.000000 (Default)
       init_buffer = 75 (Default)
+    num_samples = 1000 (Default)
+    num_warmup = 1000 (Default)
+    save_warmup = 0 (Default)
+    thin = 1 (Default)
+    adapt
+      engaged = 1 (Default)
       term_buffer = 50 (Default)
       window = 25 (Default)
+      save_metric = 0 (Default)
     algorithm = hmc (Default)
-method = sample (Default)
       hmc
         engine = nuts (Default)
           nuts
             max_depth = 10 (Default)
         metric = diag_e (Default)
+      gamma = 0.050000 (Default)
         metric_file =  (Default)
-        stepsize = 1.000000 (Default)
-        stepsize_jitter = 0.000000 (Default)
-    num_chains = 1 (Default)
-id = 1 (Default)
-data
-  file =  (Default)
-init = 2 (Default)
-  sample
-      gamma = 0.050000 (Default)
-    num_samples = 1000 (Default)
-random
-      delta = 0.800000 (Default)
-    num_warmup = 1000 (Default)
-  seed = 3930433043 (Default)
-      kappa = 0.750000 (Default)
-    save_warmup = 0 (Default)
-output
-      t0 = 10.000000 (Default)
-    thin = 1 (Default)
 method = sample (Default)
-  file = /Users/rob/.julia/dev/StanIO/test/generate_tuple_data/../../data/tuples/tuples_chain_1.csv
-      init_buffer = 75 (Default)
-    adapt
+method = sample (Default)
   sample
     num_samples = 1000 (Default)
     num_warmup = 1000 (Default)
-      engaged = 1 (Default)
-      gamma = 0.050000 (Default)
     save_warmup = 0 (Default)
     thin = 1 (Default)
-      delta = 0.800000 (Default)
-  diagnostic_file =  (Default)
     adapt
-      term_buffer = 50 (Default)
-      kappa = 0.750000 (Default)
-      window = 25 (Default)
       engaged = 1 (Default)
-  refresh = 100 (Default)
       gamma = 0.050000 (Default)
-      t0 = 10.000000 (Default)
       delta = 0.800000 (Default)
+      delta = 0.800000 (Default)
+      kappa = 0.750000 (Default)
+      t0 = 10.000000 (Default)
+      init_buffer = 75 (Default)
+      term_buffer = 50 (Default)
+      window = 25 (Default)
+      save_metric = 0 (Default)
     algorithm = hmc (Default)
-  sig_figs = 6
-  profile_file = profile.csv (Default)
-  save_cmdstan_config = 0 (Default)
-num_threads = 1 (Default)
       hmc
         engine = nuts (Default)
           nuts
@@ -85,17 +59,85 @@ num_threads = 1 (Default)
         stepsize_jitter = 0.000000 (Default)
     num_chains = 1 (Default)
 id = 2
-
-      kappa = 0.750000 (Default)
-      init_buffer = 75 (Default)
-      term_buffer = 50 (Default)
-      window = 25 (Default)
-    algorithm = hmc (Default)
-      t0 = 10.000000 (Default)
 data
   file =  (Default)
 init = 2 (Default)
+  sample
+      kappa = 0.750000 (Default)
+random
+      t0 = 10.000000 (Default)
+        stepsize = 1.000000 (Default)
       init_buffer = 75 (Default)
+  seed = 3938722150 (Default)
+        stepsize_jitter = 0.000000 (Default)
+      term_buffer = 50 (Default)
+    num_chains = 1 (Default)
+      window = 25 (Default)
+      save_metric = 0 (Default)
+output
+  file = /Users/rob/.julia/dev/StanIO/test/generate_tuple_data/../../data/tuples/tuples_chain_2.csv
+  diagnostic_file =  (Default)
+  refresh = 100 (Default)
+  sig_figs = 6
+  profile_file = profile.csv (Default)
+  save_cmdstan_config = 0 (Default)
+num_threads = 1 (Default)
+
+    algorithm = hmc (Default)
+      hmc
+        engine = nuts (Default)
+          nuts
+            max_depth = 10 (Default)
+        metric = diag_e (Default)
+        metric_file =  (Default)
+        stepsize = 1.000000 (Default)
+        stepsize_jitter = 0.000000 (Default)
+    num_chains = 1 (Default)
+id = 3
+data
+  file =  (Default)
+init = 2 (Default)
+random
+  seed = 3938722150 (Default)
+output
+  file = /Users/rob/.julia/dev/StanIO/test/generate_tuple_data/../../data/tuples/tuples_chain_3.csv
+  diagnostic_file =  (Default)
+  refresh = 100 (Default)
+  sig_figs = 6
+  profile_file = profile.csv (Default)
+  save_cmdstan_config = 0 (Default)
+num_threads = 1 (Default)
+
+id = 1 (Default)
+data
+  file =  (Default)
+init = 2 (Default)
+random
+  seed = 3938722150 (Default)
+output
+  file = /Users/rob/.julia/dev/StanIO/test/generate_tuple_data/../../data/tuples/tuples_chain_1.csv
+  diagnostic_file =  (Default)
+  refresh = 100 (Default)
+    num_samples = 1000 (Default)
+    num_warmup = 1000 (Default)
+    save_warmup = 0 (Default)
+    thin = 1 (Default)
+    adapt
+      engaged = 1 (Default)
+      gamma = 0.050000 (Default)
+      delta = 0.800000 (Default)
+      kappa = 0.750000 (Default)
+      t0 = 10.000000 (Default)
+      init_buffer = 75 (Default)
+      term_buffer = 50 (Default)
+  sig_figs = 6
+  profile_file = profile.csv (Default)
+  save_cmdstan_config = 0 (Default)
+num_threads = 1 (Default)
+
+      window = 25 (Default)
+      save_metric = 0 (Default)
+    algorithm = hmc (Default)
       hmc
         engine = nuts (Default)
           nuts
@@ -110,7 +152,7 @@ data
   file =  (Default)
 init = 2 (Default)
 random
-  seed = 3930433043 (Default)
+  seed = 3938722150 (Default)
 output
   file = /Users/rob/.julia/dev/StanIO/test/generate_tuple_data/../../data/tuples/tuples_chain_4.csv
   diagnostic_file =  (Default)
@@ -120,72 +162,34 @@ output
   save_cmdstan_config = 0 (Default)
 num_threads = 1 (Default)
 
-      term_buffer = 50 (Default)
-      window = 25 (Default)
-    algorithm = hmc (Default)
-random
-  seed = 3930433043 (Default)
-output
-  file = /Users/rob/.julia/dev/StanIO/test/generate_tuple_data/../../data/tuples/tuples_chain_2.csv
-  diagnostic_file =  (Default)
-  refresh = 100 (Default)
-      hmc
-        engine = nuts (Default)
-          nuts
-            max_depth = 10 (Default)
-        metric = diag_e (Default)
-        metric_file =  (Default)
-  sig_figs = 6
-  profile_file = profile.csv (Default)
-  save_cmdstan_config = 0 (Default)
-num_threads = 1 (Default)
-
-        stepsize = 1.000000 (Default)
-        stepsize_jitter = 0.000000 (Default)
-    num_chains = 1 (Default)
-id = 3
-data
-  file =  (Default)
-init = 2 (Default)
-random
-  seed = 3930433043 (Default)
-output
-  file = /Users/rob/.julia/dev/StanIO/test/generate_tuple_data/../../data/tuples/tuples_chain_3.csv
-  diagnostic_file =  (Default)
-  refresh = 100 (Default)
-  sig_figs = 6
-  profile_file = profile.csv (Default)
-  save_cmdstan_config = 0 (Default)
-num_threads = 1 (Default)
-
-
-Gradient evaluation took 2.3e-05 seconds
-1000 transitions using 10 leapfrog steps per transition would take 0.23 seconds.
-Adjust your expectations accordingly!
-
-
-Iteration:    1 / 2000 [  0%]  (Warmup)
-
-Gradient evaluation took 6e-06 seconds
 
 Gradient evaluation took 4e-06 seconds
 1000 transitions using 10 leapfrog steps per transition would take 0.04 seconds.
 Adjust your expectations accordingly!
 
 
-1000 transitions using 10 leapfrog steps per transition would take 0.06 seconds.
+Iteration:    1 / 2000 [  0%]  (Warmup)
+
+Gradient evaluation took 5e-06 seconds
+1000 transitions using 10 leapfrog steps per transition would take 0.05 seconds.
 Adjust your expectations accordingly!
+
+
+Gradient evaluation took 4e-06 seconds
+1000 transitions using 10 leapfrog steps per transition would take 0.04 seconds.
+Adjust your expectations accordingly!
+
 
 
 Iteration:    1 / 2000 [  0%]  (Warmup)
 
+Iteration:    1 / 2000 [  0%]  (Warmup)
 Gradient evaluation took 3e-06 seconds
 1000 transitions using 10 leapfrog steps per transition would take 0.03 seconds.
 Adjust your expectations accordingly!
 
 
 Iteration:    1 / 2000 [  0%]  (Warmup)
-Iteration:    1 / 2000 [  0%]  (Warmup)
 Iteration:  100 / 2000 [  5%]  (Warmup)
 Iteration:  100 / 2000 [  5%]  (Warmup)
 Iteration:  100 / 2000 [  5%]  (Warmup)
@@ -225,10 +229,10 @@ Iteration:  900 / 2000 [ 45%]  (Warmup)
 Iteration: 1000 / 2000 [ 50%]  (Warmup)
 Iteration: 1001 / 2000 [ 50%]  (Sampling)
 Iteration: 1000 / 2000 [ 50%]  (Warmup)
-Iteration: 1000 / 2000 [ 50%]  (Warmup)
 Iteration: 1001 / 2000 [ 50%]  (Sampling)
 Iteration: 1000 / 2000 [ 50%]  (Warmup)
 Iteration: 1001 / 2000 [ 50%]  (Sampling)
+Iteration: 1000 / 2000 [ 50%]  (Warmup)
 Iteration: 1001 / 2000 [ 50%]  (Sampling)
 Iteration: 1100 / 2000 [ 55%]  (Sampling)
 Iteration: 1100 / 2000 [ 55%]  (Sampling)
@@ -266,27 +270,27 @@ Iteration: 1900 / 2000 [ 95%]  (Sampling)
 Iteration: 1900 / 2000 [ 95%]  (Sampling)
 Iteration: 1900 / 2000 [ 95%]  (Sampling)
 Iteration: 1900 / 2000 [ 95%]  (Sampling)
-Iteration: 2000 / 2000 [100%]  (Sampling)
-
- Elapsed Time: 0.01 seconds (Warm-up)
-               0.021 seconds (Sampling)
-               0.031 seconds (Total)
-
-Iteration: 2000 / 2000 [100%]  (Sampling)
-Iteration: 2000 / 2000 [100%]  (Sampling)
-
- Elapsed Time: 0.01 seconds (Warm-up)
-               0.021 seconds (Sampling)
-               0.031 seconds (Total)
-
-
- Elapsed Time: 0.01 seconds (Warm-up)
-               0.021 seconds (Sampling)
-               0.031 seconds (Total)
-
 Iteration: 2000 / 2000 [100%]  (Sampling)
 
  Elapsed Time: 0.01 seconds (Warm-up)
                0.022 seconds (Sampling)
                0.032 seconds (Total)
+
+Iteration: 2000 / 2000 [100%]  (Sampling)
+
+ Elapsed Time: 0.01 seconds (Warm-up)
+               0.021 seconds (Sampling)
+               0.031 seconds (Total)
+
+Iteration: 2000 / 2000 [100%]  (Sampling)
+
+ Elapsed Time: 0.011 seconds (Warm-up)
+               0.021 seconds (Sampling)
+               0.032 seconds (Total)
+
+Iteration: 2000 / 2000 [100%]  (Sampling)
+
+ Elapsed Time: 0.01 seconds (Warm-up)
+               0.023 seconds (Sampling)
+               0.033 seconds (Total)
 

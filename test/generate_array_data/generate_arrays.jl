@@ -21,5 +21,10 @@ tmpdir = joinpath(@__DIR__, "..", "..", "data", "arrays")
 sm = SampleModel("arrays", stan, tmpdir)
 rc = stan_sample(sm)
 
-df2 = read_samples(sm, :nesteddataframe)
-display(df2)
+chns, col_names = read_samples(sm, :array; return_parameters=true);
+
+display(col_names)
+println()
+
+display(size(chns))
+println()

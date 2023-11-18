@@ -26,7 +26,7 @@ tmpdir = joinpath(@__DIR__, "..", "..", "data", "one_row")
 sm = SampleModel("one_row", stan, tmpdir)
 rc = stan_sample(sm)
 
-chns, col_names = read_samples(sm, :array; return_parameters=true)
+chns, col_names = read_samples(sm, :array; return_parameters=true);
 
 display(col_names)
 println()

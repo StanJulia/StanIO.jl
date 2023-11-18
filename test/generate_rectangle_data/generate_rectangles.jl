@@ -30,7 +30,7 @@ tmpdir = joinpath(@__DIR__, "..", "..", "data", "rectangles")
 sm = SampleModel("rectangles", stan, tmpdir)
 rc = stan_sample(sm)
 
-chns, col_names = read_samples(sm, :array; return_parameters=true)
+chns, col_names = read_samples(sm, :array; return_parameters=true);
 
 display(col_names)
 println()
