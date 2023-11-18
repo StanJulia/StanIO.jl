@@ -1,5 +1,8 @@
 # from https://discourse.julialang.org/t/easy-workflow-file-for-setting-up-github-actions-ci-for-your-julia-package/49765
 
+env:
+  CMDSTAN: "/home/worker/cmdstan-2.33.1/"
+
 name: CI
 on:
   pull_request:
