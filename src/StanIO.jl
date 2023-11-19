@@ -10,6 +10,7 @@ using Unicode, DelimitedFiles, OrderedCollections
 using DataFrames, CSV, Parameters, NamedTupleTools
 using JSON
 
+include("stanmodel/StaticSampleModel.jl")
 
 include("input/update_model_file.jl")
 include("input/update_json_files.jl")
@@ -22,5 +23,8 @@ include("output/dataframes.jl")
 include("output/namedtuples.jl")
 include("output/nesteddataframe.jl")
 include("output/tables.jl")
+
+export
+    StaticSampleModel
 
 end # module

@@ -17,17 +17,30 @@ using Test
 #     Aqua.test_ambiguities(StanIO)
 # end
 
-test_arrays_and_tuples = [
+arrays_and_tuples_tests = [
     "generate_tuple_data/generate_tuples.jl",
     "generate_array_data/generate_arrays.jl",
     "generate_rectangle_data/generate_rectangles.jl",
     "generate_edge_data/generate_one_row.jl",
     "generate_edge_data/generate_oned_sample.jl",
-    "generate_brian_tuple_data/generate_brian_tuples.jl",
+    #"generate_brian_tuple_data/generate_brian_tuples.jl",
 ]
 
+#=
 @testset "Arrays and tuples" begin
-    for test in test_arrays_and_tuples
+    for test in arrays_and_tuples_tests
+        println("\nTesting: $test.")
+        include(joinpath(@__DIR__, test))
+    end
+end
+=#
+
+stanio_tests = [
+    "test_stanio/test_stanio_arrays.jl",
+]
+
+@testset "StanIO tests" begin
+    for test in stanio_tests
         println("\nTesting: $test.")
         include(joinpath(@__DIR__, test))
     end
