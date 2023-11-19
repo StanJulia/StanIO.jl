@@ -1,5 +1,6 @@
 using StanIO, Test
 
-sm = StaticSampleModel("arrays", "")
+csvfiles = filter(x -> x[end-3:end] == ".csv", readdir(joinpath(stanio_data, "arrays")))
+csvfiles = joinpath.(joinpath(stanio_data, "arrays"), csvfiles)
 
-nt = StanIO.read_samples(sm, :namedtuple)
+df = StanIO.read_csvfiles(csvfiles, :dataframe)

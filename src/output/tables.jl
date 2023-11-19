@@ -29,7 +29,7 @@ Tables.isrowtable(::Type{StanTable}) = true
 function convert_a3d(a3d_array, cnames, ::Val{:table};
     chains=1:size(a3d_array, 3),
     start=1,
-    return_internals=false,
+    return_internals=true,
     kwargs...)
 
     cnames = String.(cnames)
