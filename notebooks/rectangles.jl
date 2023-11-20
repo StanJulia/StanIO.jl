@@ -33,31 +33,10 @@ html"""
 </style>
 """
 
-# ╔═╡ 79dca9f3-c2d8-430c-b0d5-658638dcf901
-stan = "
-parameters {
-    real r;
-    matrix[2, 3] x;
-    array[2, 2, 3] real<lower=0> z;
-}
-model {
-    r ~ std_normal();
-
-    for (i in 1:2) {
-        x[i,:] ~ std_normal();
-        for (j in 1:2)
-            z[i, j, :] ~ std_normal();
-    }
-}
-";
-
-# ╔═╡ 8aa3f91e-0faf-4a04-b614-3a2f6e140118
-v = readdir(joinpath(stanio_data, "arrays"))[4][end-3:end]
-
 # ╔═╡ 6a288a48-5b2c-417b-917e-c0e84ffc7563
 begin
-	csvfiles = filter(x -> x[end-3:end] == ".csv", readdir(joinpath(stanio_data, "arrays")))
-	csvfiles = joinpath.(joinpath(stanio_data, "arrays"), csvfiles)
+	csvfiles = filter(x -> x[end-3:end] == ".csv", readdir(joinpath(stanio_data, "rectangles")))
+	csvfiles = joinpath.(joinpath(stanio_data, "rectangles"), csvfiles)
 end
 
 # ╔═╡ 01c5e25c-5a51-4082-8646-7793152dde33
@@ -84,26 +63,8 @@ array_col_names
 # ╔═╡ 5f5e778f-db6e-4887-a0b2-b0159da7397f
 nts, nts_col_names = StanIO.read_csvfiles(csvfiles, :namedtuples; return_parameters=true);
 
-# ╔═╡ e2564f5d-1f77-479d-8e35-2c0f64948fa1
-size(nts.x)
-
-# ╔═╡ 3f2b3110-c213-4344-b036-4a46b0d4a16f
-size(nts.z)
-
-# ╔═╡ 6f0ded97-1b1c-4b95-ac59-875b8c2fcc7b
-nts_col_names
-
-# ╔═╡ 09bb9ca6-9079-4c5c-9eeb-78ef51f6bb78
+# ╔═╡ 7fc5bd2e-0e1d-4d96-8d43-4d63300a095b
 keys(nts)
-
-# ╔═╡ d2202329-576b-49a5-a56a-cd7bda4541d1
-nts.z
-
-# ╔═╡ 88ff640b-cab8-4423-98ce-a5f9b079e71e
-size(nts.z)
-
-# ╔═╡ 52c7d7e7-239a-49c1-848e-e0a568270132
-@test size(nts.z) == (2, 2, 3, 1000, 4)
 
 # ╔═╡ Cell order:
 # ╠═86e386a0-b56f-42f1-a6de-1f15425d1a59
@@ -111,8 +72,6 @@ size(nts.z)
 # ╠═4530e47d-abe2-4521-ba6f-1e2e4a46cf3a
 # ╠═e89264f6-3e70-474d-82aa-5956b8e824d4
 # ╠═891015c3-8539-45e1-9a9a-71acfed9cfdf
-# ╠═79dca9f3-c2d8-430c-b0d5-658638dcf901
-# ╠═8aa3f91e-0faf-4a04-b614-3a2f6e140118
 # ╠═6a288a48-5b2c-417b-917e-c0e84ffc7563
 # ╠═01c5e25c-5a51-4082-8646-7793152dde33
 # ╠═21eec5d3-ac5f-4522-8fb4-319d938234e5
@@ -122,10 +81,4 @@ size(nts.z)
 # ╠═b70b239a-c82c-4ba2-92dc-9b91a725ab9f
 # ╠═91713a39-49ac-44fc-af4b-9c305fc29978
 # ╠═5f5e778f-db6e-4887-a0b2-b0159da7397f
-# ╠═e2564f5d-1f77-479d-8e35-2c0f64948fa1
-# ╠═3f2b3110-c213-4344-b036-4a46b0d4a16f
-# ╠═6f0ded97-1b1c-4b95-ac59-875b8c2fcc7b
-# ╠═09bb9ca6-9079-4c5c-9eeb-78ef51f6bb78
-# ╠═d2202329-576b-49a5-a56a-cd7bda4541d1
-# ╠═88ff640b-cab8-4423-98ce-a5f9b079e71e
-# ╠═52c7d7e7-239a-49c1-848e-e0a568270132
+# ╠═7fc5bd2e-0e1d-4d96-8d43-4d63300a095b
