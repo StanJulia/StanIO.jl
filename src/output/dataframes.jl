@@ -43,7 +43,7 @@ function convert_a3d(a3d_array, cnames, ::Val{:dataframe})
                 cnames[i] = cnames[i][1:end-5]
             end
         end
-        println(cnames)
+        #println(cnames)
         df = DataFrame(df, cnames)
     end
 
@@ -67,14 +67,14 @@ end
 $(SIGNATURES)
 
 """
-function convert_a3d(a3d_array, cnames, ::Val{:dataframes})
+function convert_a3d(a3d_array, col_names, ::Val{:dataframes})
 
-    dfa = Vector{DataFrame}(undef, size(a3d_array, 3))
+    df = Vector{DataFrame}(undef, size(a3d_array, 3))
     for j in 1:size(a3d_array, 3)
-        dfa[j] = DataFrame(a3d_array[:, :, j], Symbol.(cnames))
+        df[j] = DataFrame(a3d_array[:, :, j], Symbol.(col_names))
 
         v = Int[]
-        cnames = names(df)
+        cnames = names(df[j])
         for (ind, cn) in enumerate(cnames)
             if length(findall(!isnothing, findfirst.("real", String.(split(cn, "."))))) > 0
                 append!(v, [ind])
@@ -82,10 +82,10 @@ function convert_a3d(a3d_array, cnames, ::Val{:dataframes})
         end
         if length(v) > 0
             for i in v
-                df[!, String(cnames[i])] = Complex.(df[:, String(cnames[i])], df[:, String(cnames[i+1])])
-                DataFrames.select!(df, Not(String(cnames[i+1])))
+                df[j][!, String(cnames[i])] = Complex.(df[j][:, String(cnames[i])], df[j][:, String(cnames[i+1])])
+                DataFrames.select!(df[j], Not(String(cnames[i+1])))
             end
-            cnames = names(df)
+            cnames = names(df[j])
             if length(v) > 0
                 v = Int[]
                 for (ind, cn) in enumerate(cnames)
@@ -97,21 +97,21 @@ function convert_a3d(a3d_array, cnames, ::Val{:dataframes})
                     cnames[i] = cnames[i][1:end-5]
                 end
             end
-            println(cnames)
-            dfa = DataFrame(df, cnames)
+            #println(cnames)
+            df[j] = DataFrame(df[j], cnames)
         end
 
-        for name in names(dfa[j])
+        for name in names(df[j])
             if name in ["treedepth__", "n_leapfrog__"]
-                dfa[j][!, name] = Int.(dfa[j][:, name])
+                df[j][!, name] = Int.(df[j][:, name])
             elseif name == "divergent__"
-                dfa[j][!, name] = Bool.(dfa[j][:, name])
+                df[j][!, name] = Bool.(df[j][:, name])
             end
         end
 
     end
 
-    dfa
+    df
 end
 
 """

@@ -112,7 +112,7 @@ function convert_a3d(a3d_array, cnames, ::Val{:nesteddataframe})
                 cnames[i] = cnames[i][1:end-5]
             end
         end
-        println(cnames)
+        #println(cnames)
         df = DataFrame(df, cnames)
     end
         
