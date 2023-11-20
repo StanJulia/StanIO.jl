@@ -37,14 +37,16 @@ html"""
 stan = "
 parameters {
     real r;
-    matrix[2, 3] x;
+	array[4] real x;
+    matrix[2, 3] y;
     array[2, 2, 3] real<lower=0> z;
 }
 model {
     r ~ std_normal();
+	x ~ std_normal();
 
     for (i in 1:2) {
-        x[i,:] ~ std_normal();
+        y[i,:] ~ std_normal();
         for (j in 1:2)
             z[i, j, :] ~ std_normal();
     }
@@ -97,13 +99,28 @@ nts_col_names
 keys(nts)
 
 # ╔═╡ d2202329-576b-49a5-a56a-cd7bda4541d1
-nts.z
+nts.z[1:5]
 
 # ╔═╡ 88ff640b-cab8-4423-98ce-a5f9b079e71e
 size(nts.z)
 
 # ╔═╡ 52c7d7e7-239a-49c1-848e-e0a568270132
 @test size(nts.z) == (2, 2, 3, 1000, 4)
+
+# ╔═╡ aefabe33-a787-47ad-a84c-8c8d36ca28b9
+ndf, ndf_col_names = StanIO.read_csvfiles(csvfiles, :nesteddataframe; return_parameters=true);
+
+# ╔═╡ cab5dbbb-ad30-4302-be98-c2fcd950f284
+ndf_col_names
+
+# ╔═╡ a4422d8b-ccd6-4c1c-9207-0f608442c687
+ndf.x[1:10]
+
+# ╔═╡ 176636b3-1a2b-4894-82f0-5bea0aef62cf
+ndf.y[1:3]
+
+# ╔═╡ 3d573697-2998-42d4-bb7f-01a134e88ab6
+ndf.z[1:3]
 
 # ╔═╡ Cell order:
 # ╠═86e386a0-b56f-42f1-a6de-1f15425d1a59
@@ -129,3 +146,8 @@ size(nts.z)
 # ╠═d2202329-576b-49a5-a56a-cd7bda4541d1
 # ╠═88ff640b-cab8-4423-98ce-a5f9b079e71e
 # ╠═52c7d7e7-239a-49c1-848e-e0a568270132
+# ╠═aefabe33-a787-47ad-a84c-8c8d36ca28b9
+# ╠═cab5dbbb-ad30-4302-be98-c2fcd950f284
+# ╠═a4422d8b-ccd6-4c1c-9207-0f608442c687
+# ╠═176636b3-1a2b-4894-82f0-5bea0aef62cf
+# ╠═3d573697-2998-42d4-bb7f-01a134e88ab6

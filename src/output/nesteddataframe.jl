@@ -88,6 +88,34 @@ function convert_a3d(a3d_array, cnames, ::Val{:nesteddataframe})
         df = vcat(df, DataFrame(a3d_array[:, :, j], Symbol.(cnames)))
     end
 
+    v = Int[]
+    cnames = names(df)
+    for (ind, cn) in enumerate(cnames)
+        if length(findall(!isnothing, findfirst.("real", String.(split(cn, "."))))) > 0
+            append!(v, [ind])
+        end
+    end
+    if length(v) > 0
+        for i in v
+            df[!, String(cnames[i])] = Complex.(df[:, String(cnames[i])], df[:, String(cnames[i+1])])
+            DataFrames.select!(df, Not(String(cnames[i+1])))
+        end
+        cnames = names(df)
+        if length(v) > 0
+            v = Int[]
+            for (ind, cn) in enumerate(cnames)
+                if length(findall(!isnothing, findfirst.("real", String.(split(cn, "."))))) > 0
+                    append!(v, [ind])
+                end
+            end
+            for i in v
+                cnames[i] = cnames[i][1:end-5]
+            end
+        end
+        println(cnames)
+        df = DataFrame(df, cnames)
+    end
+        
     nested_columns = find_nested_columns(df)
     #println(nested_columns)
     if length(nested_columns) == 0
@@ -103,17 +131,13 @@ function convert_a3d(a3d_array, cnames, ::Val{:nesteddataframe})
         col_names = names(col_df)
         #println(col_names)
         r = split(col_names[end] , ".")
-        if length(r) > 3
-            @info "Array{T, N} where N > 3 not implemented in :nesteddataframe"
-            return dft
-        end
         #println(r)
         if length(r) == 2
             dft[!, colname] = [Vector(i) for i in eachrow(col_df)]
-        elseif length(r) == 3
+        elseif length(r) > 2
             dims = Meta.parse.(r[2:end])
             #println(dims)
-            dft[!, colname] = [reshape(Vector(i), dims[1], dims[2]) for i in eachrow(col_df)]
+            dft[!, colname] = [reshape(Vector(i), dims...) for i in eachrow(col_df)]
         end
         for col in string.(col_names)
             dft = DataFrames.select(dft, Not(Symbol(col)))

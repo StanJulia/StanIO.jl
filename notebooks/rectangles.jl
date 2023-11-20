@@ -39,32 +39,14 @@ begin
 	csvfiles = joinpath.(joinpath(stanio_data, "rectangles"), csvfiles)
 end
 
-# ╔═╡ 01c5e25c-5a51-4082-8646-7793152dde33
-df = StanIO.read_csvfiles(csvfiles, :dataframe);
+# ╔═╡ 9c399d89-4768-4938-a757-425535c04ef8
+df1 = StanIO.read_csvfiles(csvfiles, :dataframe)
 
-# ╔═╡ 21eec5d3-ac5f-4522-8fb4-319d938234e5
-df
+# ╔═╡ b586b97f-bca4-439b-ac6f-5e39aa40a932
+names(df1)[40:50]
 
-# ╔═╡ b50cf06b-9751-4ce7-9696-42b8051e6102
-df2, df_col_names = StanIO.read_csvfiles(csvfiles, :dataframe; return_parameters=true);
-
-# ╔═╡ e759b33d-d236-45e9-ba0c-33b85edc2545
-df_col_names
-
-# ╔═╡ c1a23279-a0c4-47bc-a3fa-ed8a266ba5da
-a3d, array_col_names = StanIO.read_csvfiles(csvfiles, :array; return_parameters=true);
-
-# ╔═╡ b70b239a-c82c-4ba2-92dc-9b91a725ab9f
-size(a3d)
-
-# ╔═╡ 91713a39-49ac-44fc-af4b-9c305fc29978
-array_col_names
-
-# ╔═╡ 5f5e778f-db6e-4887-a0b2-b0159da7397f
-nts, nts_col_names = StanIO.read_csvfiles(csvfiles, :namedtuples; return_parameters=true);
-
-# ╔═╡ 7fc5bd2e-0e1d-4d96-8d43-4d63300a095b
-keys(nts)
+# ╔═╡ 1a5079f0-01e7-4a73-a030-c2c22d874e19
+df2 = StanIO.read_csvfiles(csvfiles, :nesteddataframe)
 
 # ╔═╡ Cell order:
 # ╠═86e386a0-b56f-42f1-a6de-1f15425d1a59
@@ -73,12 +55,6 @@ keys(nts)
 # ╠═e89264f6-3e70-474d-82aa-5956b8e824d4
 # ╠═891015c3-8539-45e1-9a9a-71acfed9cfdf
 # ╠═6a288a48-5b2c-417b-917e-c0e84ffc7563
-# ╠═01c5e25c-5a51-4082-8646-7793152dde33
-# ╠═21eec5d3-ac5f-4522-8fb4-319d938234e5
-# ╠═b50cf06b-9751-4ce7-9696-42b8051e6102
-# ╠═e759b33d-d236-45e9-ba0c-33b85edc2545
-# ╠═c1a23279-a0c4-47bc-a3fa-ed8a266ba5da
-# ╠═b70b239a-c82c-4ba2-92dc-9b91a725ab9f
-# ╠═91713a39-49ac-44fc-af4b-9c305fc29978
-# ╠═5f5e778f-db6e-4887-a0b2-b0159da7397f
-# ╠═7fc5bd2e-0e1d-4d96-8d43-4d63300a095b
+# ╠═9c399d89-4768-4938-a757-425535c04ef8
+# ╠═b586b97f-bca4-439b-ac6f-5e39aa40a932
+# ╠═1a5079f0-01e7-4a73-a030-c2c22d874e19
