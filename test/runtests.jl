@@ -18,11 +18,11 @@ using Test
 # end
 
 arrays_and_tuples_tests = [
-    "generate_tuple_data/generate_tuples.jl",
     "generate_array_data/generate_arrays.jl",
     "generate_rectangle_data/generate_rectangles.jl",
     "generate_edge_data/generate_one_row.jl",
     "generate_edge_data/generate_oned_sample.jl",
+    "generate_tuple_data/generate_tuples.jl",
     "generate_brian_tuple_data/generate_brian_tuples.jl",
 ]
 
