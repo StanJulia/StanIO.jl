@@ -122,6 +122,18 @@ ndf.y[1:3]
 # ╔═╡ 3d573697-2998-42d4-bb7f-01a134e88ab6
 ndf.z[1:3]
 
+# ╔═╡ a05c2963-3d94-4513-9d30-a12d2e2ec497
+begin
+	dct = Dict()
+	for col_name in names(ndf)[8:end]
+		dct[Symbol(col_name)] = ndf[:, col_name]
+	end
+	dct
+end
+
+# ╔═╡ d0f0e982-2110-48d4-ac32-fb0d7474b506
+nt = (;dct...)
+
 # ╔═╡ Cell order:
 # ╠═86e386a0-b56f-42f1-a6de-1f15425d1a59
 # ╠═c706075a-0174-450d-a1b0-b202cee4d216
@@ -151,3 +163,5 @@ ndf.z[1:3]
 # ╠═a4422d8b-ccd6-4c1c-9207-0f608442c687
 # ╠═176636b3-1a2b-4894-82f0-5bea0aef62cf
 # ╠═3d573697-2998-42d4-bb7f-01a134e88ab6
+# ╠═a05c2963-3d94-4513-9d30-a12d2e2ec497
+# ╠═d0f0e982-2110-48d4-ac32-fb0d7474b506

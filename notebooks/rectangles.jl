@@ -51,6 +51,21 @@ df2 = StanIO.read_csvfiles(csvfiles, :nesteddataframe)
 # ╔═╡ 47382829-cc92-40cb-91a5-b9017d545e7d
 df3 = StanIO.read_csvfiles(csvfiles, :dataframes)
 
+# ╔═╡ 973d8498-3aaf-4241-b112-b22047a2b095
+names(df2)[8:end]
+
+# ╔═╡ 299e4bd5-2d6f-46b3-af69-f406fdc708ac
+begin
+	dct = Dict()
+	for col_name in names(df2)[8:end]
+		dct[Symbol(col_name)] = df2[:, col_name]
+	end
+	dct
+end
+
+# ╔═╡ 9ea49d96-b1c0-416d-aad3-54a25e271256
+nt = (;dct...)
+
 # ╔═╡ Cell order:
 # ╠═86e386a0-b56f-42f1-a6de-1f15425d1a59
 # ╠═c706075a-0174-450d-a1b0-b202cee4d216
@@ -62,3 +77,6 @@ df3 = StanIO.read_csvfiles(csvfiles, :dataframes)
 # ╠═b586b97f-bca4-439b-ac6f-5e39aa40a932
 # ╠═1a5079f0-01e7-4a73-a030-c2c22d874e19
 # ╠═47382829-cc92-40cb-91a5-b9017d545e7d
+# ╠═973d8498-3aaf-4241-b112-b22047a2b095
+# ╠═299e4bd5-2d6f-46b3-af69-f406fdc708ac
+# ╠═9ea49d96-b1c0-416d-aad3-54a25e271256
