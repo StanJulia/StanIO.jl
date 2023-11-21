@@ -23,20 +23,21 @@ arrays_and_tuples_tests = [
     "generate_rectangle_data/generate_rectangles.jl",
     "generate_edge_data/generate_one_row.jl",
     "generate_edge_data/generate_oned_sample.jl",
-    #"generate_brian_tuple_data/generate_brian_tuples.jl",
+    "generate_brian_tuple_data/generate_brian_tuples.jl",
 ]
 
-#=
+
 @testset "Arrays and tuples" begin
     for test in arrays_and_tuples_tests
         println("\nTesting: $test.")
         include(joinpath(@__DIR__, test))
     end
 end
-=#
+
 
 stanio_tests = [
     "test_stanio/test_stanio_arrays.jl",
+    "test_stanio/test_stanio_rectangles.jl",
 ]
 
 @testset "StanIO tests" begin
