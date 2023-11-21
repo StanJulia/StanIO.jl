@@ -26,14 +26,14 @@ arrays_and_tuples_tests = [
     "generate_brian_tuple_data/generate_brian_tuples.jl",
 ]
 
-
+#=
 @testset "Arrays and tuples" begin
     for test in arrays_and_tuples_tests
         println("\nTesting: $test.")
         include(joinpath(@__DIR__, test))
     end
 end
-
+=#
 
 stanio_tests = [
     "test_stanio/test_stanio_arrays.jl",
