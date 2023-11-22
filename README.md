@@ -6,7 +6,7 @@
 
 [issues-url]: https://github.com/stanjulia/StanIO.jl/issues
 [project-status-img]: https://img.shields.io/badge/lifecycle-experimental-orange.svg
-[CI]: https://github.com/StanJulia/StanIO.jl/actions/workflows/CI.yml
+[CI]:https://github.com/StanJulia/StanIO.jl/actions/workflows/CI.yml/badge.svg
 
 ## Purpose
 
