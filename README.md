@@ -4,7 +4,7 @@
 |:---------------------------:|:-----------------:|
 |![][project-status-img] | ![][CI-build] |
 
-[CI-build]: https://github.com/stanjulia/StanIO.jl/workflows/CI/badge.svg?branch=master
+[CI-build]: https://github.com/stanjulia/StanIO.jl/workflows/CI/badge.svg?branch=main
 [issues-url]: https://github.com/stanjulia/StanIO.jl/issues
 [project-status-img]: https://img.shields.io/badge/lifecycle-experimental-orange.svg
 
