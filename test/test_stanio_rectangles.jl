@@ -1,7 +1,7 @@
 using StanIO, Test
 
-csvfiles = filter(x -> x[end-3:end] == ".csv", readdir(joinpath(stanio_data, "arrays")))
-csvfiles = joinpath.(joinpath(stanio_data, "arrays"), csvfiles)
+csvfiles = filter(x -> x[end-3:end] == ".csv", readdir(joinpath(stanio_data, "rectangles")))
+csvfiles = joinpath.(joinpath(stanio_data, "rectangles"), csvfiles)
 
 println()
 a3d, array_col_names = StanIO.read_csvfiles(csvfiles, :array; return_parameters=true);
@@ -16,7 +16,7 @@ ndf = StanIO.read_csvfiles(csvfiles, :nesteddataframe)
 display(names(ndf))
 
 println()
-nts, nts_col_names = StanIO.read_csvfiles(csvfiles, :namedtuples; return_parameters=true);
-display(keys(nts))
+nt = convert(NamedTuple, ndf)
+display(keys(nt))
 
-@test size(nts.z) == (2, 2, 3, 1000, 4)
+@test size(nt.z) == (4000,)

@@ -83,30 +83,6 @@ size(a3d)
 # ╔═╡ 91713a39-49ac-44fc-af4b-9c305fc29978
 array_col_names
 
-# ╔═╡ 5f5e778f-db6e-4887-a0b2-b0159da7397f
-nts, nts_col_names = StanIO.read_csvfiles(csvfiles, :namedtuples; return_parameters=true);
-
-# ╔═╡ e2564f5d-1f77-479d-8e35-2c0f64948fa1
-size(nts.x)
-
-# ╔═╡ 3f2b3110-c213-4344-b036-4a46b0d4a16f
-size(nts.z)
-
-# ╔═╡ 6f0ded97-1b1c-4b95-ac59-875b8c2fcc7b
-nts_col_names
-
-# ╔═╡ 09bb9ca6-9079-4c5c-9eeb-78ef51f6bb78
-keys(nts)
-
-# ╔═╡ d2202329-576b-49a5-a56a-cd7bda4541d1
-nts.z[1:5]
-
-# ╔═╡ 88ff640b-cab8-4423-98ce-a5f9b079e71e
-size(nts.z)
-
-# ╔═╡ 52c7d7e7-239a-49c1-848e-e0a568270132
-@test size(nts.z) == (2, 2, 3, 1000, 4)
-
 # ╔═╡ aefabe33-a787-47ad-a84c-8c8d36ca28b9
 ndf, ndf_col_names = StanIO.read_csvfiles(csvfiles, :nesteddataframe; return_parameters=true);
 
@@ -122,17 +98,17 @@ ndf.y[1:3]
 # ╔═╡ 3d573697-2998-42d4-bb7f-01a134e88ab6
 ndf.z[1:3]
 
-# ╔═╡ a05c2963-3d94-4513-9d30-a12d2e2ec497
-begin
-	dct = Dict()
-	for col_name in names(ndf)[8:end]
-		dct[Symbol(col_name)] = ndf[:, col_name]
-	end
-	dct
-end
-
 # ╔═╡ d0f0e982-2110-48d4-ac32-fb0d7474b506
-nt = (;dct...)
+nt = convert(NamedTuple, ndf);
+
+# ╔═╡ a752d255-baa6-47db-bc08-101a0e839755
+keys(nt)[8:end]
+
+# ╔═╡ 8fb632b6-a212-4245-8289-50b2e1c5c34d
+nt.y
+
+# ╔═╡ 4223ae1b-a249-4b62-804a-a66476eb5e91
+nt.z[1:3]
 
 # ╔═╡ Cell order:
 # ╠═86e386a0-b56f-42f1-a6de-1f15425d1a59
@@ -150,18 +126,12 @@ nt = (;dct...)
 # ╠═c1a23279-a0c4-47bc-a3fa-ed8a266ba5da
 # ╠═b70b239a-c82c-4ba2-92dc-9b91a725ab9f
 # ╠═91713a39-49ac-44fc-af4b-9c305fc29978
-# ╠═5f5e778f-db6e-4887-a0b2-b0159da7397f
-# ╠═e2564f5d-1f77-479d-8e35-2c0f64948fa1
-# ╠═3f2b3110-c213-4344-b036-4a46b0d4a16f
-# ╠═6f0ded97-1b1c-4b95-ac59-875b8c2fcc7b
-# ╠═09bb9ca6-9079-4c5c-9eeb-78ef51f6bb78
-# ╠═d2202329-576b-49a5-a56a-cd7bda4541d1
-# ╠═88ff640b-cab8-4423-98ce-a5f9b079e71e
-# ╠═52c7d7e7-239a-49c1-848e-e0a568270132
 # ╠═aefabe33-a787-47ad-a84c-8c8d36ca28b9
 # ╠═cab5dbbb-ad30-4302-be98-c2fcd950f284
 # ╠═a4422d8b-ccd6-4c1c-9207-0f608442c687
 # ╠═176636b3-1a2b-4894-82f0-5bea0aef62cf
 # ╠═3d573697-2998-42d4-bb7f-01a134e88ab6
-# ╠═a05c2963-3d94-4513-9d30-a12d2e2ec497
 # ╠═d0f0e982-2110-48d4-ac32-fb0d7474b506
+# ╠═a752d255-baa6-47db-bc08-101a0e839755
+# ╠═8fb632b6-a212-4245-8289-50b2e1c5c34d
+# ╠═4223ae1b-a249-4b62-804a-a66476eb5e91

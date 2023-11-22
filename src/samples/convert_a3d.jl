@@ -29,6 +29,6 @@ convert_a3d(a3d_array, cnames; output_format=::Val{Symbol}, start=1)
 * `res`                       : Draws converted to the specified format.
 ```
 
-
+Not exported
 """
 convert_a3d(a3d_array, cnames, ::Val{:array}; kwargs...) = a3d_array

@@ -36,8 +36,8 @@ end
 =#
 
 stanio_tests = [
-    "test_stanio/test_stanio_arrays.jl",
-    "test_stanio/test_stanio_rectangles.jl",
+    "test_stanio_arrays.jl",
+    "test_stanio_rectangles.jl",
 ]
 
 @testset "StanIO tests" begin

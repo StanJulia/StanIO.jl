@@ -19,3 +19,11 @@
 -->
 <!-- Aqua badge, see test/runtests.jl -->
 <!-- [![Aqua QA](https://raw.githubusercontent.com/JuliaTesting/Aqua.jl/master/badge.svg)](https://github.com/JuliaTesting/Aqua.jl) -->
+
+## Purpose
+
+StanIO.jl reads in Stan .csv files and is able to create DataFrames (including nested DataFrames) and NamedTuples.
+
+Currently StanIO handles rectangular arrays in the .csv files created by Stan.
+
+Under consideration is to also support `tuples` in the .csv files.
