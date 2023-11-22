@@ -2,11 +2,12 @@
 
 | **Project Status**          |  **Build Status** |
 |:---------------------------:|:-----------------:|
-|![][project-status-img] | ![][CI-build] |
+|![][project-status-img] | ![][CI] |
 
 [CI-build]: https://github.com/stanjulia/StanIO.jl/workflows/CI/badge.svg?branch=main
 [issues-url]: https://github.com/stanjulia/StanIO.jl/issues
 [project-status-img]: https://img.shields.io/badge/lifecycle-experimental-orange.svg
+[![CI](https://github.com/StanJulia/StanIO.jl/actions/workflows/CI.yml/badge.svg)](https://github.com/StanJulia/StanIO.jl/actions/workflows/CI.yml)
 
 ## Purpose
 
