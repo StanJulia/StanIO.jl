@@ -81,51 +81,43 @@ a3d, col_names = StanIO.read_csvfiles(csvfiles, :array; return_parameters=true);
 # ╔═╡ 59cab475-ddff-4dea-9762-7b97c437770f
  begin
  	ndf = StanIO.read_csvfiles(csvfiles, :nesteddataframe)
-	ndf = df[:, 8:end]
+	ndf = ndf[:, 7:end]
  end
 
-# ╔═╡ c8290cf6-03ef-4c51-bf0e-2db5977f42d8
-stan_def = "array[3,2] tuple(real, real) arr_2d_pair = {{(1, 3), (4, 5)}, {(6, 7), (8, 9)}, {(20, 21), (22, 23)}};"
+# ╔═╡ 57a43a87-4cfd-49a4-8e4f-44170ce0ec3c
+names(ndf)
 
-# ╔═╡ a541f226-f6f0-4daa-8258-442a56e7bc94
-x_def = ["r", "x.1.1:1", "x.1.1:2", "x.2.1:1", "x.2.1:2", "x.3.1:1", "x.3.1:2", "x.1.2:1", "x.1.2:2", "x.2.2:1", "x.2.2:2", "x.3.2:1", "x.3.2:2", "y"];
+# ╔═╡ b67a35ce-0379-4280-9e00-4a23300db7e7
+StanIO.find_nested_columns(df)
 
-# ╔═╡ e445918b-e57f-4ac4-9576-f3edbdbcba0a
-x_val = [1, 3, 6, 7, 20, 21, 4, 5, 8, 9, 22, 23];
-
-# ╔═╡ e5e81f0f-858e-4479-ab61-7c1a4ee62c7e
-function find_nested_columns(x_def)
-    nested_columns = String[]
-    for (i, s) in enumerate(x_def)
-        r = split(s, ['.', ':'])
-        if length(r) > 1
-            append!(nested_columns, [r[1]])
-        end
-    end
-    unique(nested_columns)
-end
-
-# ╔═╡ b5ee6486-f042-485e-bc61-f30d39575a79
-function select_nested_column(x_def, var::Union{Symbol, String})
+# ╔═╡ b2c6d4a7-7cf8-4661-8283-a2fc2f331df3
+function select_nested_column(df::DataFrame, var::Union{Symbol, String})
+    n = string.(names(df))
     sym = string(var)
     sel = String[]
-    for (i, s) in enumerate(x_def)
-        if length(s) > length(sym) && sym == x_def[i][1:length(sym)] && x_def[i][length(sym)+1] in ['.']
-            append!(sel, [x_def[i]])
-        end
+    for (i, s) in enumerate(n)
+		splits = findall(c -> c in ['.', ':'], s)
+		if length(splits) > 0
+			println((splits, sym, s, length(s), s[1:splits[1]-1]))
+	        if length(splits) > 0 && sym == s[1:splits[1]-1]
+	            append!(sel, [n[i]])
+	        end
+		end
     end
-    length(sel) == 0 && @warn "$syms not in $x_def"
-    sel
+    length(sel) == 0 && @warn "$sym not in $n"
+    #println(sel)
+    df[:, sel]
 end
 
-# ╔═╡ 5a45fe14-d32f-48eb-ab1d-8a82dcb334bc
-nested_columns = find_nested_columns(x_def)
+# ╔═╡ 87d8e7eb-4419-40bc-9103-4b072e5947a7
+x_df = select_nested_column(df, :x)
 
-# ╔═╡ aa5051d6-506a-41c7-9cf3-610a0815f3fe
-xdef = select_nested_column(x_def, nested_columns[1]) 
+# ╔═╡ ec3495cf-053e-4757-8b56-eda4a9ff15a7
+b_df = select_nested_column(df, :bar)
 
-# ╔═╡ 952bff76-8ca3-43da-abc1-1afa90b424eb
-function handle_nested_column(x_def, x_val)
+# ╔═╡ c6130f37-0482-4f7a-8b29-65e2a6c4e2e8
+function handle_nested_column(df)
+	x_def = names(df)
 	index_matrix = Meta.parse.(split(x_def[end], ['.', ':'])[2:end])
 	splits = findall(c -> c in ['.', ':'], x_def[1])
 	nf = Vector{Tuple{Int, Symbol, Int}}()
@@ -137,31 +129,13 @@ function handle_nested_column(x_def, x_val)
 end
 
 # ╔═╡ a5f16633-c98d-463c-a54c-d124ef4f6c07
-nf = handle_nested_column(xdef, x_val)
+nf_x = handle_nested_column(x_df)
 
 # ╔═╡ 9690333f-757f-409c-b965-030a4969a130
-x_val
-
-# ╔═╡ 70390e88-2373-4356-a5e4-9dee1ecffd8b
-x_def
-
-# ╔═╡ 81468a03-83eb-4438-8591-22b256670f46
-md" {{(1, 3), (4, 5)}, {(6, 7), (8, 9)}, {(20, 21), (22, 23)}}"
-
-# ╔═╡ 03ec4af3-6e5c-427a-92f1-6e4220431b04
-begin
-	a = Vector{NTuple{2}}()
-	for i in 1:2:length(x_val)
-		append!(a, [(x_val[i], x_val[i+1])])
-	end
-	a
-end
-
-# ╔═╡ 37afd7b7-de12-4e06-9159-5f92af6ee4f7
-reshape(a, 3, 2)
+x_val = Array(x_df[1, :])
 
 # ╔═╡ 80342dd8-3dd8-4ede-9312-99641b43957a
-function handle_arrays_and_tuples(flds, x_def, x_val, da=Int[])
+function handle_arrays_and_tuples(flds, x_def=names(x_df); x_val=Array(x_df[1, :]), da=Int[])
 	te = copy(x_val)
 	nf = copy(flds)
 	daf = copy(da)
@@ -172,35 +146,51 @@ function handle_arrays_and_tuples(flds, x_def, x_val, da=Int[])
 			daf = Int[]
 		end
 		println(("End:", nf, te, daf))
-		return (nf, te, daf)
+		return te
 	elseif nf[end][2] == :tuple
 		if length(daf) > 0
 			te = reshape(te, daf...)
 			daf = Int[]
 		end
+		println((nf, te, daf, x_def))
 		te = Vector{NTuple{2}}()
 		for i in 1:2:length(x_val)
 			append!(te, [(x_val[i], x_val[i+1])])
 		end
 		nf = nf[1:end-1]
 		println((nf, te, daf))
-		handle_arrays_and_tuples(nf, x_def, te, daf)
+		handle_arrays_and_tuples(nf, x_def; x_val=te, da=daf)
 	elseif nf[end][2] == :array
 		daf = vcat(nf[end][3], daf)
 		nf = nf[1:end-1]
 		println((nf, te, daf))
-		handle_arrays_and_tuples(nf, x_def, te, daf)
+		handle_arrays_and_tuples(nf, x_def; x_val=te, da=daf)
 	end
 end
 
-# ╔═╡ bc8190f2-1240-4050-be6a-bd4d5ed1d4f5
-begin
-	_, te, _ = handle_arrays_and_tuples(nf, x_def, x_val)
-	te
-end
+# ╔═╡ 431d8ed1-c8db-469f-8f4c-9c26f4310925
+nf_x
 
-# ╔═╡ 1b27d9c3-19a1-4479-935a-532a51455cc6
-reshape(te, [3, 2]...)
+# ╔═╡ bc8190f2-1240-4050-be6a-bd4d5ed1d4f5
+x_res = handle_arrays_and_tuples(nf_x, names(x_df); x_val=Array(x_df[1, :]))
+
+# ╔═╡ 044455ae-1021-450a-9db0-49372512fef2
+bar_df = select_nested_column(df, :bar)
+
+# ╔═╡ a23ae743-2174-414a-b543-0d1fd61da2ca
+nf_bar = handle_nested_column(bar_df)
+
+# ╔═╡ 65816360-0814-4330-8df6-98bb10fb8fdc
+bar_res = handle_arrays_and_tuples(nf_bar, names(bar_df); x_val=Array(bar_df[1, :]))
+
+# ╔═╡ aa50c548-6f20-4156-a275-7ab1f2d7cfbc
+bar2_df = select_nested_column(df, :bar2)
+
+# ╔═╡ ac159e77-2be5-4acb-b51c-e6ae87de4ea8
+nf_bar2 = handle_nested_column(bar2_df)
+
+# ╔═╡ 9d66e8dc-f7a9-4f65-acdb-d9ef3bdad906
+bar2_res = handle_arrays_and_tuples(nf_bar2, names(bar2_df); x_val=Array(bar2_df[1, :]))
 
 # ╔═╡ Cell order:
 # ╠═86e386a0-b56f-42f1-a6de-1f15425d1a59
@@ -213,20 +203,20 @@ reshape(te, [3, 2]...)
 # ╠═8ca11b28-e702-4328-8fb9-17909f2aadcc
 # ╠═727aa981-0ae2-4ca4-8c6c-e85f236ac28f
 # ╠═59cab475-ddff-4dea-9762-7b97c437770f
-# ╠═c8290cf6-03ef-4c51-bf0e-2db5977f42d8
-# ╠═a541f226-f6f0-4daa-8258-442a56e7bc94
-# ╠═e445918b-e57f-4ac4-9576-f3edbdbcba0a
-# ╠═e5e81f0f-858e-4479-ab61-7c1a4ee62c7e
-# ╠═b5ee6486-f042-485e-bc61-f30d39575a79
-# ╠═5a45fe14-d32f-48eb-ab1d-8a82dcb334bc
-# ╠═aa5051d6-506a-41c7-9cf3-610a0815f3fe
-# ╠═952bff76-8ca3-43da-abc1-1afa90b424eb
+# ╠═57a43a87-4cfd-49a4-8e4f-44170ce0ec3c
+# ╠═b67a35ce-0379-4280-9e00-4a23300db7e7
+# ╠═87d8e7eb-4419-40bc-9103-4b072e5947a7
+# ╠═ec3495cf-053e-4757-8b56-eda4a9ff15a7
+# ╠═b2c6d4a7-7cf8-4661-8283-a2fc2f331df3
+# ╠═c6130f37-0482-4f7a-8b29-65e2a6c4e2e8
 # ╠═a5f16633-c98d-463c-a54c-d124ef4f6c07
 # ╠═9690333f-757f-409c-b965-030a4969a130
-# ╠═70390e88-2373-4356-a5e4-9dee1ecffd8b
-# ╠═81468a03-83eb-4438-8591-22b256670f46
-# ╠═03ec4af3-6e5c-427a-92f1-6e4220431b04
-# ╠═37afd7b7-de12-4e06-9159-5f92af6ee4f7
 # ╠═80342dd8-3dd8-4ede-9312-99641b43957a
+# ╠═431d8ed1-c8db-469f-8f4c-9c26f4310925
 # ╠═bc8190f2-1240-4050-be6a-bd4d5ed1d4f5
-# ╠═1b27d9c3-19a1-4479-935a-532a51455cc6
+# ╠═044455ae-1021-450a-9db0-49372512fef2
+# ╠═a23ae743-2174-414a-b543-0d1fd61da2ca
+# ╠═65816360-0814-4330-8df6-98bb10fb8fdc
+# ╠═aa50c548-6f20-4156-a275-7ab1f2d7cfbc
+# ╠═ac159e77-2be5-4acb-b51c-e6ae87de4ea8
+# ╠═9d66e8dc-f7a9-4f65-acdb-d9ef3bdad906

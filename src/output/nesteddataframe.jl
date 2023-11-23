@@ -19,7 +19,7 @@ function select_nested_column(df::DataFrame, var::Union{Symbol, String})
             append!(sel, [n[i]])
         end
     end
-    length(sel) == 0 && @warn "$syms not in $n"
+    length(sel) == 0 && @warn "$sym not in $n"
     #println(sel)
     df[:, sel]
 end
