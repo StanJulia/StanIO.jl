@@ -81,14 +81,24 @@ a3d, col_names = StanIO.read_csvfiles(csvfiles, :array; return_parameters=true);
 # ╔═╡ 59cab475-ddff-4dea-9762-7b97c437770f
  begin
  	ndf = StanIO.read_csvfiles(csvfiles, :nesteddataframe)
-	ndf = ndf[:, 7:end]
+	ndf = ndf[:, 9:end]
  end
 
 # ╔═╡ 57a43a87-4cfd-49a4-8e4f-44170ce0ec3c
 names(ndf)
 
-# ╔═╡ b67a35ce-0379-4280-9e00-4a23300db7e7
-StanIO.find_nested_columns(df)
+# ╔═╡ 3f116117-d056-48b3-a9ee-93ca44cb45b6
+function find_nested_columns(df::DataFrame)
+    n = string.(names(df))
+    nested_columns = String[]
+    for (i, s) in enumerate(n)
+        r = split(s, ['.', ':'])
+        if length(r) > 1
+            append!(nested_columns, [r[1]])
+        end
+    end
+    unique(nested_columns)
+end
 
 # ╔═╡ b2c6d4a7-7cf8-4661-8283-a2fc2f331df3
 function select_nested_column(df::DataFrame, var::Union{Symbol, String})
@@ -98,7 +108,7 @@ function select_nested_column(df::DataFrame, var::Union{Symbol, String})
     for (i, s) in enumerate(n)
 		splits = findall(c -> c in ['.', ':'], s)
 		if length(splits) > 0
-			println((splits, sym, s, length(s), s[1:splits[1]-1]))
+			#println((splits, sym, s, length(s), s[1:splits[1]-1]))
 	        if length(splits) > 0 && sym == s[1:splits[1]-1]
 	            append!(sel, [n[i]])
 	        end
@@ -109,88 +119,202 @@ function select_nested_column(df::DataFrame, var::Union{Symbol, String})
     df[:, sel]
 end
 
-# ╔═╡ 87d8e7eb-4419-40bc-9103-4b072e5947a7
-x_df = select_nested_column(df, :x)
+# ╔═╡ 6e58174a-4fa2-4f0c-b90e-11f759a3935b
+function is_arrays_only(df)
+	fns = names(df)
+	l = [findall(c -> c in [':', '.'], fn) for fn in fns]
+	la = [findall(c -> c in ['.'], fn) for fn in fns]
+	return l == la
+end
 
-# ╔═╡ ec3495cf-053e-4757-8b56-eda4a9ff15a7
-b_df = select_nested_column(df, :bar)
+# ╔═╡ 7de37725-bf40-4ba9-9385-e345a242e36e
+function is_tuples_only(df)
+	fns = names(df)
+	l = [findall(c -> c in [':', '.'], fn) for fn in fns]
+	lt = [findall(c -> c in [':'], fn) for fn in fns]
+	return l == lt
+end
 
-# ╔═╡ c6130f37-0482-4f7a-8b29-65e2a6c4e2e8
-function handle_nested_column(df)
-	x_def = names(df)
-	index_matrix = Meta.parse.(split(x_def[end], ['.', ':'])[2:end])
-	splits = findall(c -> c in ['.', ':'], x_def[1])
-	nf = Vector{Tuple{Int, Symbol, Int}}()
-	for (i, s) in enumerate(splits)
-		t = x_def[1][s] == '.' ? :array : :tuple
-		append!(nf, [(s, t, index_matrix[i])])
+# ╔═╡ 51cc906b-f961-408b-b38c-44cf42f86622
+function get_splits(fns)
+	splits = Int[]
+	for i in 1:length(fns)
+		splts = findall(c -> c in ['.', ':'], fns[i])
+		for j in 1:length(splts)
+			push!(splits, splts[j])
+		end
 	end
+	splits = unique(splits)
+	return splits
+end
+
+# ╔═╡ 7bc13f29-7a80-4656-aae5-649c8188fa54
+function handle_nested_column(df)
+	fns = names(df)
+	#println(fns)
+	splits = get_splits(fns)
+	#println(splits)
+	nf = Vector{Tuple{Int, Symbol, Any}}()
+	t = fns[1][splits[1]] == '.' ? :array : :tuple
+	if t == :array && is_arrays_only(df)
+		im = [Meta.parse.(split(fns[i], ['.', ':'])[2:end]) for i in 1:length(fns)]
+		#println(im)
+		for (i, s) in enumerate(splits)
+			append!(nf, [(s, t, im[end][i])])
+		end
+	elseif is_tuples_only(df)
+		#println("Handle tuple")
+		cur_len = 0
+		next_len = nothing
+		for i in 1:length(fns)
+			im = Meta.parse.(split(fns[i], ['.', ':'])[2:end])
+			if i < length(fns)
+				im_next = Meta.parse.(split(fns[i+1], ['.', ':'])[2:end])
+			elseif i == length(fns)
+				im_next = 0
+			else
+				im_next = nothing
+			end
+			next_len = isnothing(im_next) ? nothing : length(im_next)
+			cur_len = length(im)
+			fsplit = findall(c -> c in ['.', ':'], fns[i])
+			println((im=im, im_next=im_next, cur_len=cur_len, next_len=next_len, fsplit=fsplit))
+			if !isnothing(next_len) && (cur_len !== next_len || !(i == 1))
+				new_entry = (fsplit[cur_len], :tuple, im[end])
+				#println(new_entry)
+				append!(nf, [new_entry])
+				nf = unique(nf)
+			end
+		end
+	elseif !is_arrays_only(df) || is_tuples_only(df)
+		@warn "Mixed arrays and tuples not supported!"
+		return nothing
+	end
+	println(nf)
 	nf
 end
 
-# ╔═╡ a5f16633-c98d-463c-a54c-d124ef4f6c07
-nf_x = handle_nested_column(x_df)
+# ╔═╡ 87d8e7eb-4419-40bc-9103-4b072e5947a7
+x_df = select_nested_column(df, :x)
 
-# ╔═╡ 9690333f-757f-409c-b965-030a4969a130
-x_val = Array(x_df[1, :])
+# ╔═╡ ae985ce1-45f5-4f8e-be22-91137c701e06
+handle_nested_column(x_df)
+
+# ╔═╡ ec3495cf-053e-4757-8b56-eda4a9ff15a7
+bar_df = select_nested_column(df, :bar)
+
+# ╔═╡ 5c8c2b43-1494-4e98-9093-fb3d91d4a837
+handle_nested_column(bar_df)
 
 # ╔═╡ 80342dd8-3dd8-4ede-9312-99641b43957a
-function handle_arrays_and_tuples(flds, x_def=names(x_df); x_val=Array(x_df[1, :]), da=Int[])
+function handle_arrays_and_tuples(flds, x_def=names(x_df); 
+		x_val=Array(x_df[1, :]), da=Int[], df=DataFrame(), debug=true)
+	println(x_def)
 	te = copy(x_val)
 	nf = copy(flds)
+	println(nf)
 	daf = copy(da)
+	if debug 
+		append!(df, DataFrame(Step="Enter:", nf=[nf], te=[te], da=[daf]))
+	end
+	#println(df)
 	if length(nf) == 0
-		println(("End:", nf, te, daf))
+		debug && append!(df, DataFrame(Step="Final in:", nf=[nf], te=[te], da=[daf]))
 		if length(daf) > 0
 			te = reshape(te, daf...)
 			daf = Int[]
 		end
-		println(("End:", nf, te, daf))
-		return te
+		debug && append!(df, DataFrame(Step="Final out:", nf=[nf], te=[te], da=[daf]); promote=true)
+		if debug
+			return (te, df)
+		else
+			return te
+		end
 	elseif nf[end][2] == :tuple
+		println((nf, te, daf, x_def))
 		if length(daf) > 0
 			te = reshape(te, daf...)
 			daf = Int[]
 		end
 		println((nf, te, daf, x_def))
+		debug && append!(df, DataFrame(Step="Tuple in:", nf=[nf], te=[te], da=[daf]); promote=true)
 		te = Vector{NTuple{2}}()
 		for i in 1:2:length(x_val)
 			append!(te, [(x_val[i], x_val[i+1])])
 		end
 		nf = nf[1:end-1]
-		println((nf, te, daf))
-		handle_arrays_and_tuples(nf, x_def; x_val=te, da=daf)
+		#println((nf, te, daf))
+		debug && append!(df, DataFrame(Step="Tuple out:", nf=[nf], te=te, da=[daf]); promote=true)
+		handle_arrays_and_tuples(nf, x_def; x_val=te, df=df, da=daf, debug)
 	elseif nf[end][2] == :array
+		println((nf, te, daf))
+		debug && append!(df, DataFrame(Step="Array in:", nf=[nf], te=[te], da=[daf]); promote=true)
 		daf = vcat(nf[end][3], daf)
 		nf = nf[1:end-1]
 		println((nf, te, daf))
-		handle_arrays_and_tuples(nf, x_def; x_val=te, da=daf)
+		debug && append!(df, DataFrame(Step="Array out:", nf=[nf], te=[te], da=[daf]); promote=true)
+		handle_arrays_and_tuples(nf, x_def; x_val=te, df=df, da=daf, debug)
 	end
 end
 
-# ╔═╡ 431d8ed1-c8db-469f-8f4c-9c26f4310925
-nf_x
+# ╔═╡ 5ee5859e-a556-4ae0-9623-7591b8e87888
+function nested_flds(df, col; debug=true)
+	df = select_nested_column(df, Symbol(col))
+	nf = handle_nested_column(df)
+	if isnothing(nf)
+		return nothing
+	end
+	x_val = Array(df[1, :])
+	res = handle_arrays_and_tuples(nf, names(df); x_val=Array(df[1, :]), debug)
+	return (res)
+end
 
-# ╔═╡ bc8190f2-1240-4050-be6a-bd4d5ed1d4f5
-x_res = handle_arrays_and_tuples(nf_x, names(x_df); x_val=Array(x_df[1, :]))
+# ╔═╡ 111475ac-ec83-47de-b49c-37543b96fada
+begin
+	debug = true
+	res = nested_flds(df, "x"; debug)
+	if debug
+		x_res, x_steps_df = res
+	else
+		x_res = res
+	end
+	x_res
+end
 
-# ╔═╡ 044455ae-1021-450a-9db0-49372512fef2
-bar_df = select_nested_column(df, :bar)
+# ╔═╡ fa44ee61-0908-4b86-807f-c8045519c88c
+x_steps_df
 
-# ╔═╡ a23ae743-2174-414a-b543-0d1fd61da2ca
-nf_bar = handle_nested_column(bar_df)
+# ╔═╡ 945988ff-5b49-45b3-9c30-8263e7b0fc77
+begin
+	bar_res, bar_debug = nested_flds(df, "bar")
+	bar_res
+end
 
-# ╔═╡ 65816360-0814-4330-8df6-98bb10fb8fdc
-bar_res = handle_arrays_and_tuples(nf_bar, names(bar_df); x_val=Array(bar_df[1, :]))
+# ╔═╡ 29772409-a85e-4971-a684-5ce9659c4cd7
+bar_debug
 
 # ╔═╡ aa50c548-6f20-4156-a275-7ab1f2d7cfbc
+begin
+	bar2_res, bar2_debug = nested_flds(df, :bar2)
+end
+
+# ╔═╡ 73a6b430-f7e7-4dd0-8269-d43f89c4bc52
 bar2_df = select_nested_column(df, :bar2)
 
-# ╔═╡ ac159e77-2be5-4acb-b51c-e6ae87de4ea8
-nf_bar2 = handle_nested_column(bar2_df)
+# ╔═╡ 2ff4d6f4-2b61-4e42-b380-7db59c7ce4ec
+handle_nested_column(bar2_df)
 
-# ╔═╡ 9d66e8dc-f7a9-4f65-acdb-d9ef3bdad906
-bar2_res = handle_arrays_and_tuples(nf_bar2, names(bar2_df); x_val=Array(bar2_df[1, :]))
+# ╔═╡ e93dc8ac-58ea-4d68-ad9d-f7a375ce6ec6
+nested_flds(df, :bar3)
+
+# ╔═╡ 4202bf16-c4c7-489a-81b5-298317011ece
+bar3_df = select_nested_column(df, :bar3)
+
+# ╔═╡ 7d33daee-2c6d-4468-a013-232ff7170a53
+handle_nested_column(bar3_df)
+
+# ╔═╡ d64b4a72-08c8-4f8f-8358-4ff10f59707c
+names(bar3_df)
 
 # ╔═╡ Cell order:
 # ╠═86e386a0-b56f-42f1-a6de-1f15425d1a59
@@ -204,19 +328,26 @@ bar2_res = handle_arrays_and_tuples(nf_bar2, names(bar2_df); x_val=Array(bar2_df
 # ╠═727aa981-0ae2-4ca4-8c6c-e85f236ac28f
 # ╠═59cab475-ddff-4dea-9762-7b97c437770f
 # ╠═57a43a87-4cfd-49a4-8e4f-44170ce0ec3c
-# ╠═b67a35ce-0379-4280-9e00-4a23300db7e7
-# ╠═87d8e7eb-4419-40bc-9103-4b072e5947a7
-# ╠═ec3495cf-053e-4757-8b56-eda4a9ff15a7
+# ╠═3f116117-d056-48b3-a9ee-93ca44cb45b6
 # ╠═b2c6d4a7-7cf8-4661-8283-a2fc2f331df3
-# ╠═c6130f37-0482-4f7a-8b29-65e2a6c4e2e8
-# ╠═a5f16633-c98d-463c-a54c-d124ef4f6c07
-# ╠═9690333f-757f-409c-b965-030a4969a130
+# ╠═6e58174a-4fa2-4f0c-b90e-11f759a3935b
+# ╠═7de37725-bf40-4ba9-9385-e345a242e36e
+# ╠═51cc906b-f961-408b-b38c-44cf42f86622
+# ╠═7bc13f29-7a80-4656-aae5-649c8188fa54
+# ╠═ae985ce1-45f5-4f8e-be22-91137c701e06
+# ╠═5c8c2b43-1494-4e98-9093-fb3d91d4a837
+# ╠═2ff4d6f4-2b61-4e42-b380-7db59c7ce4ec
+# ╠═7d33daee-2c6d-4468-a013-232ff7170a53
+# ╠═d64b4a72-08c8-4f8f-8358-4ff10f59707c
+# ╠═5ee5859e-a556-4ae0-9623-7591b8e87888
+# ╠═111475ac-ec83-47de-b49c-37543b96fada
+# ╠═fa44ee61-0908-4b86-807f-c8045519c88c
+# ╠═87d8e7eb-4419-40bc-9103-4b072e5947a7
+# ╠═945988ff-5b49-45b3-9c30-8263e7b0fc77
+# ╠═29772409-a85e-4971-a684-5ce9659c4cd7
+# ╠═ec3495cf-053e-4757-8b56-eda4a9ff15a7
 # ╠═80342dd8-3dd8-4ede-9312-99641b43957a
-# ╠═431d8ed1-c8db-469f-8f4c-9c26f4310925
-# ╠═bc8190f2-1240-4050-be6a-bd4d5ed1d4f5
-# ╠═044455ae-1021-450a-9db0-49372512fef2
-# ╠═a23ae743-2174-414a-b543-0d1fd61da2ca
-# ╠═65816360-0814-4330-8df6-98bb10fb8fdc
 # ╠═aa50c548-6f20-4156-a275-7ab1f2d7cfbc
-# ╠═ac159e77-2be5-4acb-b51c-e6ae87de4ea8
-# ╠═9d66e8dc-f7a9-4f65-acdb-d9ef3bdad906
+# ╠═73a6b430-f7e7-4dd0-8269-d43f89c4bc52
+# ╠═e93dc8ac-58ea-4d68-ad9d-f7a375ce6ec6
+# ╠═4202bf16-c4c7-489a-81b5-298317011ece

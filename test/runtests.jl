@@ -18,12 +18,7 @@ using Test
 # end
 
 arrays_and_tuples_tests = [
-    "generate_array_data/generate_arrays.jl",
-    "generate_rectangle_data/generate_rectangles.jl",
-    "generate_edge_data/generate_one_row.jl",
-    "generate_edge_data/generate_oned_sample.jl",
-    "generate_tuple_data/generate_tuples.jl",
-    "generate_brian_tuple_data/generate_brian_tuples.jl",
+    "generate_test_data/generate_test_cases.jl",
 ]
 
 #=
@@ -36,8 +31,7 @@ end
 =#
 
 stanio_tests = [
-    "test_stanio_arrays.jl",
-    "test_stanio_rectangles.jl",
+    "test_convert.jl",
 ]
 
 @testset "StanIO tests" begin
