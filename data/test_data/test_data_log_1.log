@@ -6,149 +6,139 @@ method = sample (Default)
     thin = 1 (Default)
     adapt
       engaged = 1 (Default)
+method = sample (Default)
       gamma = 0.050000 (Default)
-      delta = 0.800000 (Default)
-method = sample (Default)
   sample
+method = sample (Default)
+method = sample (Default)
     num_samples = 1000 (Default)
-method = sample (Default)
-    num_warmup = 1000 (Default)
+      delta = 0.800000 (Default)
   sample
+  sample
+    num_warmup = 1000 (Default)
+      kappa = 0.750000 (Default)
+    num_samples = 1000 (Default)
+    num_samples = 1000 (Default)
     save_warmup = 0 (Default)
+      t0 = 10.000000 (Default)
+    num_warmup = 1000 (Default)
     thin = 1 (Default)
+    num_warmup = 1000 (Default)
+    save_warmup = 0 (Default)
     adapt
+      init_buffer = 75 (Default)
+    save_warmup = 0 (Default)
+      engaged = 1 (Default)
+      term_buffer = 50 (Default)
+    thin = 1 (Default)
+    thin = 1 (Default)
+      gamma = 0.050000 (Default)
+    adapt
+    adapt
+      window = 25 (Default)
+      engaged = 1 (Default)
+      delta = 0.800000 (Default)
+    algorithm = hmc (Default)
       engaged = 1 (Default)
       gamma = 0.050000 (Default)
-      delta = 0.800000 (Default)
-      kappa = 0.750000 (Default)
-      t0 = 10.000000 (Default)
-      init_buffer = 75 (Default)
-      term_buffer = 50 (Default)
-      window = 25 (Default)
-    algorithm = hmc (Default)
       hmc
-    num_samples = 1000 (Default)
-        engine = nuts (Default)
-    num_warmup = 1000 (Default)
-          nuts
-            max_depth = 10 (Default)
-        metric = diag_e (Default)
-        metric_file =  (Default)
-    save_warmup = 0 (Default)
-    thin = 1 (Default)
-    adapt
-      engaged = 1 (Default)
-        stepsize = 1.000000 (Default)
+      kappa = 0.750000 (Default)
       gamma = 0.050000 (Default)
-      kappa = 0.750000 (Default)
-        stepsize_jitter = 0.000000 (Default)
-      delta = 0.800000 (Default)
-method = sample (Default)
-    num_chains = 1 (Default)
-      t0 = 10.000000 (Default)
-  sample
-id = 1 (Default)
-      init_buffer = 75 (Default)
-    num_samples = 1000 (Default)
-data
-      term_buffer = 50 (Default)
-    num_warmup = 1000 (Default)
-  file =  (Default)
-      window = 25 (Default)
-    save_warmup = 0 (Default)
-init = 2 (Default)
-    algorithm = hmc (Default)
-random
-    thin = 1 (Default)
-      hmc
-    adapt
-  seed = 696323825 (Default)
         engine = nuts (Default)
-output
-      engaged = 1 (Default)
-          nuts
-  file = /Users/rob/.julia/dev/StanIO/data/test_data/test_data_chain_1.csv
-      gamma = 0.050000 (Default)
-  diagnostic_file =  (Default)
       delta = 0.800000 (Default)
-            max_depth = 10 (Default)
-      kappa = 0.750000 (Default)
-  refresh = 100 (Default)
-        metric = diag_e (Default)
-      kappa = 0.750000 (Default)
-        metric_file =  (Default)
-  sig_figs = 6
       t0 = 10.000000 (Default)
-        stepsize = 1.000000 (Default)
-  profile_file = profile.csv (Default)
-      init_buffer = 75 (Default)
-      t0 = 10.000000 (Default)
-        stepsize_jitter = 0.000000 (Default)
-      term_buffer = 50 (Default)
-  save_cmdstan_config = 0 (Default)
-    num_chains = 1 (Default)
-      window = 25 (Default)
-id = 2
-    algorithm = hmc (Default)
-num_threads = 1 (Default)
-data
-      hmc
-
-  file =  (Default)
-init = 2 (Default)
-random
-        engine = nuts (Default)
-  seed = 696323825 (Default)
           nuts
-output
-            max_depth = 10 (Default)
-  file = /Users/rob/.julia/dev/StanIO/data/test_data/test_data_chain_2.csv
-        metric = diag_e (Default)
-  diagnostic_file =  (Default)
-        metric_file =  (Default)
-  refresh = 100 (Default)
-  sig_figs = 6
-  profile_file = profile.csv (Default)
-  save_cmdstan_config = 0 (Default)
-num_threads = 1 (Default)
-
+      delta = 0.800000 (Default)
       init_buffer = 75 (Default)
-        stepsize = 1.000000 (Default)
+      kappa = 0.750000 (Default)
+            max_depth = 10 (Default)
+      t0 = 10.000000 (Default)
       term_buffer = 50 (Default)
+      init_buffer = 75 (Default)
+        metric = diag_e (Default)
+      term_buffer = 50 (Default)
+      window = 25 (Default)
+      window = 25 (Default)
+        metric_file =  (Default)
+    algorithm = hmc (Default)
+    algorithm = hmc (Default)
+      kappa = 0.750000 (Default)
+      hmc
+        stepsize = 1.000000 (Default)
+      hmc
+        engine = nuts (Default)
+      t0 = 10.000000 (Default)
+        engine = nuts (Default)
+          nuts
         stepsize_jitter = 0.000000 (Default)
+          nuts
+      init_buffer = 75 (Default)
     num_chains = 1 (Default)
+            max_depth = 10 (Default)
+            max_depth = 10 (Default)
 id = 3
 data
+      term_buffer = 50 (Default)
   file =  (Default)
+        metric = diag_e (Default)
 init = 2 (Default)
+        metric = diag_e (Default)
 random
-  seed = 696323825 (Default)
+        metric_file =  (Default)
+      window = 25 (Default)
+  seed = 939746911 (Default)
+        metric_file =  (Default)
+    algorithm = hmc (Default)
+        stepsize = 1.000000 (Default)
 output
+      hmc
+        stepsize = 1.000000 (Default)
   file = /Users/rob/.julia/dev/StanIO/data/test_data/test_data_chain_3.csv
+        stepsize_jitter = 0.000000 (Default)
+        engine = nuts (Default)
+  diagnostic_file =  (Default)
+        stepsize_jitter = 0.000000 (Default)
+          nuts
+    num_chains = 1 (Default)
+    num_chains = 1 (Default)
+            max_depth = 10 (Default)
+  refresh = 100 (Default)
+id = 1 (Default)
+id = 2
+  sig_figs = 6
+data
+data
+        metric = diag_e (Default)
+  file =  (Default)
+  file =  (Default)
+  profile_file = profile.csv (Default)
+init = 2 (Default)
+init = 2 (Default)
+        metric_file =  (Default)
+random
+random
+  save_cmdstan_config = 0 (Default)
+  seed = 939746911 (Default)
+num_threads = 1 (Default)
+  seed = 939746911 (Default)
+
+output
+output
+  file = /Users/rob/.julia/dev/StanIO/data/test_data/test_data_chain_2.csv
+        stepsize = 1.000000 (Default)
   diagnostic_file =  (Default)
   refresh = 100 (Default)
   sig_figs = 6
-  profile_file = profile.csv (Default)
-  save_cmdstan_config = 0 (Default)
-num_threads = 1 (Default)
-
-      window = 25 (Default)
-    algorithm = hmc (Default)
-      hmc
-        engine = nuts (Default)
-          nuts
-            max_depth = 10 (Default)
-        metric = diag_e (Default)
-        metric_file =  (Default)
-        stepsize = 1.000000 (Default)
+  file = /Users/rob/.julia/dev/StanIO/data/test_data/test_data_chain_1.csv
         stepsize_jitter = 0.000000 (Default)
+  profile_file = profile.csv (Default)
     num_chains = 1 (Default)
 id = 4
 data
   file =  (Default)
 init = 2 (Default)
 random
-  seed = 696323825 (Default)
+  seed = 939746911 (Default)
 output
   file = /Users/rob/.julia/dev/StanIO/data/test_data/test_data_chain_4.csv
   diagnostic_file =  (Default)
@@ -158,33 +148,43 @@ output
   save_cmdstan_config = 0 (Default)
 num_threads = 1 (Default)
 
+  diagnostic_file =  (Default)
+  save_cmdstan_config = 0 (Default)
+  refresh = 100 (Default)
+  sig_figs = 6
+  profile_file = profile.csv (Default)
+  save_cmdstan_config = 0 (Default)
+num_threads = 1 (Default)
 
-Gradient evaluation took 3e-05 seconds
-1000 transitions using 10 leapfrog steps per transition would take 0.3 seconds.
+num_threads = 1 (Default)
 
-Gradient evaluation took 6e-06 seconds
-1000 transitions using 10 leapfrog steps per transition would take 0.06 seconds.
+
+Gradient evaluation took 5.4e-05 seconds
+1000 transitions using 10 leapfrog steps per transition would take 0.54 seconds.
 Adjust your expectations accordingly!
 
 
+
+Gradient evaluation took 1.1e-05 seconds
+1000 transitions using 10 leapfrog steps per transition would take 0.11 seconds.
 Adjust your expectations accordingly!
 
 
-
-Gradient evaluation took 4e-06 seconds
-1000 transitions using 10 leapfrog steps per transition would take 0.04 seconds.
 Iteration:    1 / 2000 [  0%]  (Warmup)
+
+
+Iteration:    1 / 2000 [  0%]  (Warmup)
+Gradient evaluation took 9e-06 seconds
+Gradient evaluation took 8e-06 seconds
+1000 transitions using 10 leapfrog steps per transition would take 0.09 seconds.
+Adjust your expectations accordingly!
+
+
+1000 transitions using 10 leapfrog steps per transition would take 0.08 seconds.
 Adjust your expectations accordingly!
 
 
 Iteration:    1 / 2000 [  0%]  (Warmup)
-Iteration:    1 / 2000 [  0%]  (Warmup)
-
-Gradient evaluation took 3e-06 seconds
-1000 transitions using 10 leapfrog steps per transition would take 0.03 seconds.
-Adjust your expectations accordingly!
-
-
 Iteration:    1 / 2000 [  0%]  (Warmup)
 Iteration:  100 / 2000 [  5%]  (Warmup)
 Iteration:  100 / 2000 [  5%]  (Warmup)
@@ -214,19 +214,19 @@ Iteration:  700 / 2000 [ 35%]  (Warmup)
 Iteration:  700 / 2000 [ 35%]  (Warmup)
 Iteration:  700 / 2000 [ 35%]  (Warmup)
 Iteration:  700 / 2000 [ 35%]  (Warmup)
+Iteration:  800 / 2000 [ 40%]  (Warmup)
 Iteration:  800 / 2000 [ 40%]  (Warmup)
 Iteration:  800 / 2000 [ 40%]  (Warmup)
 Iteration:  800 / 2000 [ 40%]  (Warmup)
 Iteration:  900 / 2000 [ 45%]  (Warmup)
 Iteration:  900 / 2000 [ 45%]  (Warmup)
 Iteration:  900 / 2000 [ 45%]  (Warmup)
-Iteration:  800 / 2000 [ 40%]  (Warmup)
+Iteration:  900 / 2000 [ 45%]  (Warmup)
 Iteration: 1000 / 2000 [ 50%]  (Warmup)
 Iteration: 1000 / 2000 [ 50%]  (Warmup)
 Iteration: 1001 / 2000 [ 50%]  (Sampling)
-Iteration: 1001 / 2000 [ 50%]  (Sampling)
-Iteration:  900 / 2000 [ 45%]  (Warmup)
 Iteration: 1000 / 2000 [ 50%]  (Warmup)
+Iteration: 1001 / 2000 [ 50%]  (Sampling)
 Iteration: 1001 / 2000 [ 50%]  (Sampling)
 Iteration: 1000 / 2000 [ 50%]  (Warmup)
 Iteration: 1001 / 2000 [ 50%]  (Sampling)
@@ -268,25 +268,25 @@ Iteration: 1900 / 2000 [ 95%]  (Sampling)
 Iteration: 1900 / 2000 [ 95%]  (Sampling)
 Iteration: 2000 / 2000 [100%]  (Sampling)
 
- Elapsed Time: 0.013 seconds (Warm-up)
-               0.03 seconds (Sampling)
-               0.043 seconds (Total)
+ Elapsed Time: 0.023 seconds (Warm-up)
+               0.031 seconds (Sampling)
+               0.054 seconds (Total)
 
 Iteration: 2000 / 2000 [100%]  (Sampling)
-
- Elapsed Time: 0.014 seconds (Warm-up)
-               0.029 seconds (Sampling)
-               0.043 seconds (Total)
-
+Iteration: 2000 / 2000 [100%]  (Sampling)
 Iteration: 2000 / 2000 [100%]  (Sampling)
 
- Elapsed Time: 0.014 seconds (Warm-up)
-               0.03 seconds (Sampling)
-               0.044 seconds (Total)
+ Elapsed Time: 0.023 seconds (Warm-up)
+               0.031 seconds (Sampling)
+               0.054 seconds (Total)
 
-Iteration: 2000 / 2000 [100%]  (Sampling)
 
- Elapsed Time: 0.013 seconds (Warm-up)
-               0.032 seconds (Sampling)
-               0.045 seconds (Total)
+
+ Elapsed Time: 0.024 seconds (Warm-up)
+               0.031 seconds (Sampling)
+               0.055 seconds (Total)
+
+ Elapsed Time: 0.024 seconds (Warm-up)
+               0.031 seconds (Sampling)
+               0.055 seconds (Total)
 

@@ -1,5 +1,7 @@
 parameters {
     real r;
+    real mu;
+    real nu;
     matrix[2, 3] x;
     tuple(real, real) bar;
     tuple(real, tuple(real, real)) bar2;
@@ -12,7 +14,6 @@ model {
         x[i,:] ~ std_normal();
     }
 
-
     bar.1 ~ std_normal();
     bar.2 ~ std_normal();
     bar2.1 ~ std_normal();
@@ -22,4 +23,13 @@ model {
     bar3.2.1 ~ std_normal();
     bar3.2.2.1 ~ std_normal();
     bar3.2.2.2 ~ std_normal();
+
+    mu ~ normal(0, 1);
+    nu ~ normal(mu, 1);
 }
+generated quantities {
+    complex z;
+    complex_vector[2] zv;
+    z = nu + nu * 2.0i;
+    zv = to_complex([3 * nu, 5 * nu]', [nu * 4, nu * 6]');
+    }
