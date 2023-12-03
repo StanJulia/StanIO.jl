@@ -22,6 +22,9 @@ end
 # ╔═╡ e953be75-6f32-4a33-bded-a809ff38e5cd
 md" ### Translation of [stanio](https://github.com/WardBrian/stanio) by Brian Ward."
 
+# ╔═╡ d3fb7f48-bbec-48f8-bebc-a53a89e27716
+md" ###### This notebook shows the methods available in StanIO."
+
 # ╔═╡ 789c3f0b-8179-4126-baf5-fdd47b1938f5
 md" ##### Widen the cells."
 
@@ -37,8 +40,8 @@ html"""
 </style>
 """
 
-# ╔═╡ 90dd4d50-2f82-4df6-94b1-a9a72bc44e59
-
+# ╔═╡ bdf6a4a7-358a-4004-ad24-0397441b203a
+md" ###### Comment out below cell to use the packages from the Julia repository."
 
 # ╔═╡ ca0a71bb-7ac1-4c01-9a0a-24f1ce1479bd
 md" #### Setup dataframes for testing."
@@ -58,46 +61,17 @@ begin
 # ╔═╡ 2967add5-2c78-4b39-a055-174eac6daa3e
 a3d, col_names = StanIO.read_csvfiles(csvfiles, :array; return_parameters=true);
 
-# ╔═╡ 3839fdc5-e7f2-4cb6-8a48-70c670b42fbb
-function find_nested_columns(df::DataFrame)
-    n = string.(names(df))
-    nested_columns = String[]
-    for (i, s) in enumerate(n)
-        r = split(s, ['.', ':'])
-        if length(r) > 1
-            append!(nested_columns, [r[1]])
-        end
-    end
-    unique(nested_columns)
-end
+# ╔═╡ c3975028-9fef-415a-ac57-9256e8b65637
+StanIO.find_nested_columns(df)
 
-# ╔═╡ 91ed7ff7-249c-4627-b8e7-d8eb2307ceb8
-function select_nested_column(df::DataFrame, var::Union{Symbol, String})
-    n = string.(names(df))
-    sym = string(var)
-    sel = String[]
-    for (i, s) in enumerate(n)
-		splits = findall(c -> c in ['.', ':'], s)
-		if length(splits) > 0
-			#println((splits, sym, s, length(s), s[1:splits[1]-1]))
-	        if length(splits) > 0 && sym == s[1:splits[1]-1]
-	            append!(sel, [n[i]])
-	        end
-		end
-    end
-    length(sel) == 0 && @warn "$sym not in $n"
-    #println(sel)
-    df[:, sel]
-end
-
-# ╔═╡ c342b21d-0ea3-4852-b22d-d79c228d71a1
-x_df = select_nested_column(df, :x)
+# ╔═╡ 533dbca3-980c-41de-83e9-fbbab3728738
+x_df = StanIO.select_nested_column(df, :x)
 
 # ╔═╡ e192e46f-f650-4dd7-9811-e8255013d292
-bar3_df = select_nested_column(df, "bar3")
+bar3_df = StanIO.select_nested_column(df, "bar3")
 
 # ╔═╡ 0d6684e4-b4fb-4418-8631-5a07dd60a612
-bar_df = select_nested_column(df, "bar")
+bar_df = StanIO.select_nested_column(df, "bar")
 
 # ╔═╡ ed833949-9eb3-496c-b822-9d84a365954b
 @enum VariableType SCALAR=1 COMPLEX TUPLE ARRAY
@@ -251,19 +225,19 @@ convert(NamedTuple, ndf)
 
 # ╔═╡ Cell order:
 # ╟─e953be75-6f32-4a33-bded-a809ff38e5cd
+# ╟─d3fb7f48-bbec-48f8-bebc-a53a89e27716
 # ╟─789c3f0b-8179-4126-baf5-fdd47b1938f5
 # ╠═c08d0f35-92fb-4e10-81a6-5a68eea4d046
-# ╠═90dd4d50-2f82-4df6-94b1-a9a72bc44e59
 # ╠═3d7c5e2c-8eba-11ee-02c7-5382f0852ca2
+# ╟─bdf6a4a7-358a-4004-ad24-0397441b203a
 # ╠═a1328860-a754-4eb8-9855-e18d9ab50c0c
 # ╠═ecf1f379-7774-4a41-928e-be10be1786b4
 # ╟─ca0a71bb-7ac1-4c01-9a0a-24f1ce1479bd
 # ╠═4e2984b1-435d-4cac-80ef-316060aa93af
 # ╠═78d5367b-542a-41b6-85da-fc616046dba4
 # ╠═2967add5-2c78-4b39-a055-174eac6daa3e
-# ╠═3839fdc5-e7f2-4cb6-8a48-70c670b42fbb
-# ╠═91ed7ff7-249c-4627-b8e7-d8eb2307ceb8
-# ╠═c342b21d-0ea3-4852-b22d-d79c228d71a1
+# ╠═c3975028-9fef-415a-ac57-9256e8b65637
+# ╠═533dbca3-980c-41de-83e9-fbbab3728738
 # ╠═e192e46f-f650-4dd7-9811-e8255013d292
 # ╠═0d6684e4-b4fb-4418-8631-5a07dd60a612
 # ╠═ed833949-9eb3-496c-b822-9d84a365954b
