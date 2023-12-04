@@ -34,6 +34,8 @@ end
 
 $TYPEDEF
 
+$FIELDS
+
 This class represents a single output variable of a Stan model.
 
 It contains information about the name, dimensions, and type of the
@@ -41,8 +43,9 @@ variable, as well as the indices of where that variable is located in
 the flattened output array Stan models write.
 
 Generally, this class should not be instantiated directly, but rather
-created by the :func:`parse_header()` function.
+created by the `parse_header()` function.
 
+Not exported.
 """
 struct Variable
     name::AbstractString # Name as in Stan .csv file. For nested fields, just the initial part.
@@ -116,20 +119,25 @@ end
 $SIGNATURES
 
 Given a comma-separated list of names of Stan outputs, like
-that from the header row of a CSV file, parse it into a dictionary of `Variable` objects.
+that from the header row of a CSV file, parse it into a 
+dictionary of `Variable` objects.
 
 Parameters
 ----------
 header::Vector{String}
+
     Comma separated list of Stan variables, including index information.
-    For example, an ``array[2] real foo` would be represented as
-    ``foo.1,foo.2``.
+    For example, an `array[2] real foo` would be represented as
+    `..., foo.1, foo.2, ...` in Stan's .csv file.
 
 Returns
 -------
 Dict[String, Variable]
+
     A dictionary mapping the base name of each variable to a struct `Variable`.
-    """
+
+Exported.
+"""
 function parse_header(header::Vector{String})
 	d = Dict{String, Variable}()
 	for param in _from_header(header)
@@ -163,32 +171,29 @@ end
 
 $SIGNATURES
 
-Given an array where the final dimension is the flattened output of a
-Stan model, (e.g. one row of a Stan CSV file), extract the variable
-and reshape it to the correct type and dimensions.
+Given the output of a Stan modelas a DataFrame, 
+reshape variable `v` to the correct type and dimensions.
 
-This will most likely result in copies of the data being made if
-the variable is not a scalar.
 
 Parameters
 ----------
 
 v::Variable
+
 	Variable object to use to extract draws.
 
 df::DataFrame
-    The array to extract from.
 
-    Indicies besides the final dimension are preserved
-    in the output.
+    The DataFrame to extract from. 
 
 Returns
 -------
 
-Array
-    The extracted variable, reshaped to the correct dimensions.
-    If the variable is a tuple, this will be an array of tuples.
+    The extracted variable, reshaped to the correct
+    dimensions. If the variable is a tuple, this
+    will be an array of tuples.
 
+Not exported.
 """
 function extract_helper(v::Variable, df::DataFrame, offset=0)
 	return _extract_helper(v, df)
@@ -205,17 +210,22 @@ correct dimensions.
 Parameters
 ----------
 parameters::Dict{String, Variable}
-    A dictionary of `Variable` objects, like that returned by `parse_header()`.
+
+    A dictionary of `Variable` objects, 
+    like that returned by `parse_header()`.
 
 df::DataFrame
-    The DataFrame (as returned from `read_csvfiles()`) to extract from.
+
+    The DataFrame (as returned from `read_csvfiles()`) 
+    to extract from.
 
 
 Returns
 -------
-DataFrame
-    A DataFrame with the reshaped data.
-    
+
+    A, possibly nested, DataFrame with reshaped fields. 
+
+Exported.
 """
 function stan_variables(dct::Dict{String, Variable}, df::DataFrame)
 	res = DataFrame()
