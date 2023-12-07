@@ -82,11 +82,9 @@ end
 
 function _from_header(hdr)
 	header = String.(vcat(strip.(hdr), "__dummy"))
-	#println(header)
 	entries = header
 	params = Variable[]
 	var_type = SCALAR
-	munged_header = String[]
 	start_idx = 1
 	name = _get_base_name(entries[1])
 	for i in 1:length(entries)-1
@@ -102,6 +100,9 @@ function _from_header(hdr)
 			elseif !isnothing(findfirst(':', entry))
 				dims = Meta.parse.(split(entry, ":")[1] |> x -> split(x, ".")[2:end])
 				munged_header = map(_munge_first_tuple, entries[start_idx:i])
+				if length(dims) > 0
+					munged_header = munged_header[1:(Int(length(munged_header)/prod(dims)))]
+				end
 				var_type = TUPLE
 				append!(params, [Variable(name, start_idx, i+1, tuple(dims...), var_type, 
 					_from_header(munged_header))])
@@ -203,9 +204,9 @@ end
 
 $SIGNATURES
 
-Given a dictionary of `Variable` objects and a source DataFrame,
-extract the variables from the source array and reshape them to the
-correct dimensions.
+Given a dictionary of `Variable` objects and a source 
+DataFrame, extract the variables from the source array
+and reshape them to the correct dimensions.
 
 Parameters
 ----------
@@ -216,8 +217,9 @@ parameters::Dict{String, Variable}
 
 df::DataFrame
 
-    The DataFrame (as returned from `read_csvfiles()`) 
-    to extract from.
+    A DataFrame (as returned from `read_csvfiles()`
+    or `read_samples(model, :dataframe)`) to 
+    extract the draws from.
 
 
 Returns

@@ -35,7 +35,7 @@ html"""
 		margin: 0 auto;
 		max-width: 2000px;
     	padding-left: max(160px, 10%);
-    	padding-right: max(160px, 20%);
+    	padding-right: max(160px, 10%);
 	}
 </style>
 """
@@ -48,14 +48,14 @@ md" #### Setup dataframes for testing."
 
 # ╔═╡ 4e2984b1-435d-4cac-80ef-316060aa93af
 begin
-	csvfiles = filter(x -> x[end-3:end] == ".csv", readdir(joinpath(stanio_data, "test_data")))
-	csvfiles = joinpath.(joinpath(stanio_data, "test_data"), csvfiles)
+	csvfiles = filter(x -> x[end-3:end] == ".csv", readdir(joinpath(stanio_data, "tup_03")))
+	csvfiles = joinpath.(joinpath(stanio_data, "tup_03"), csvfiles)
 end
 
 # ╔═╡ 78d5367b-542a-41b6-85da-fc616046dba4
 begin
  	df = StanIO.read_csvfiles(csvfiles, :dataframe)
-	df = df[:, 8:end]
+	df = df[:, 3:end]
  end
 
 # ╔═╡ 2967add5-2c78-4b39-a055-174eac6daa3e
@@ -65,13 +65,10 @@ a3d, col_names = StanIO.read_csvfiles(csvfiles, :array; return_parameters=true);
 StanIO.find_nested_columns(df)
 
 # ╔═╡ 533dbca3-980c-41de-83e9-fbbab3728738
-x_df = StanIO.select_nested_column(df, :x)
+u_df = StanIO.select_nested_column(df, :u)
 
-# ╔═╡ e192e46f-f650-4dd7-9811-e8255013d292
-bar3_df = StanIO.select_nested_column(df, "bar3")
-
-# ╔═╡ 0d6684e4-b4fb-4418-8631-5a07dd60a612
-bar_df = StanIO.select_nested_column(df, "bar")
+# ╔═╡ e689523d-1bbb-43e7-a465-aa2dfc045c1f
+size(u_df)
 
 # ╔═╡ ed833949-9eb3-496c-b822-9d84a365954b
 @enum VariableType SCALAR=1 COMPLEX TUPLE ARRAY
@@ -121,11 +118,9 @@ end
 # ╔═╡ f6c17840-e46a-488f-a5ba-028daf19346a
 function _from_header(hdr)
 	header = String.(vcat(strip.(hdr), "__dummy"))
-	#println(header)
 	entries = header
 	params = Variable[]
 	var_type = SCALAR
-	munged_header = String[]
 	start_idx = 1
 	name = _get_base_name(entries[1])
 	for i in 1:length(entries)-1
@@ -141,7 +136,7 @@ function _from_header(hdr)
 			elseif !isnothing(findfirst(':', entry))
 				dims = Meta.parse.(split(entry, ":")[1] |> x -> split(x, ".")[2:end])
 				munged_header = map(_munge_first_tuple, entries[start_idx:i])
-				if length(dims) > 0
+				if !isnothing(findfirst(':', munged_header[1])) && length(dims) > 0
 					munged_header = munged_header[1:(Int(length(munged_header)/prod(dims)))]
 				end
 				var_type = TUPLE
@@ -154,6 +149,13 @@ function _from_header(hdr)
 	end
 	return params
 end
+	
+
+# ╔═╡ 4a061441-e7b8-41c4-a965-4a916305ddb2
+_from_header(names(u_df))
+
+# ╔═╡ 1a0dd4af-38af-4ad7-adb6-42b6a9ac96a9
+hn = names(u_df)
 
 # ╔═╡ 6d7c6a69-013e-4f71-a038-45ada998fd60
 function parse_header(header::Vector{String})
@@ -202,6 +204,13 @@ function _extract_helper(v::Variable, df::DataFrame, offset=0)
 	end
 end
 
+# ╔═╡ 5fb59a29-1916-4070-acbd-b2449bd6dc33
+let
+	at = fill((1, 3, 4,), 3, 2)
+	at[2,2] = (1,2,5)
+	at
+end
+
 # ╔═╡ b1467c24-8109-4a7c-a5e2-0749b8107918
 function extract_helper(v::Variable, df::DataFrame, offset=0)
 	return _extract_helper(v, df)
@@ -219,11 +228,63 @@ end
 # ╔═╡ 52084c1a-6db8-4c06-994e-0e0a9371c169
 dct = parse_header(names(df))
 
+# ╔═╡ d8434058-1ce1-47c3-a842-1ba0901c9d52
+dct
+
+# ╔═╡ 996e0a83-66da-4b05-a141-6e9451595cb9
+stan = "
+generated quantities {
+    real base = normal_rng(0, 1);
+    matrix[4, 5] m = to_matrix(linspaced_vector(20, 7, 11), 4, 5) * base;
+    array[2,3] tuple(array[2] tuple(real, array[2] real), matrix[4,5]) u =
+    {
+        {
+            (
+                {(base, {base *2, base *3}), (base *4, {base*5, base*6})}, m
+            ),
+            (
+                {(base, {base *2, base *3}), (base *4, {base*5, base*6})}, m
+            ),
+            (
+                {(base, {base *2, base *3}), (base *4, {base*5, base*6})}, m
+            )
+        },
+        {
+            (
+                {(base, {base *2, base *3}), (base *4, {base*5, base*6})}, m
+            ),
+            (
+                {(base, {base *2, base *3}), (base *4, {base*5, base*6})}, m
+            ),
+            (
+                {(base, {base *2, base *3}), (base *4, {base*5, base*6})}, m
+            )
+        }
+    };
+}
+";
+
+
 # ╔═╡ 5cca3538-97f4-47d0-afa1-0bd95bf7f08e
 ndf = stan_variables(dct, df)
 
+# ╔═╡ b3e502df-7628-4fbe-b495-e7fcf843cf9c
+ndf.u[1][1:2]
+
+# ╔═╡ 1732c452-1e72-4512-82c5-7802cea325f1
+begin
+	u = Tuple[]
+	for i in 1:2:length(ndf.u[1])
+		append!(u, tuple((ndf.u[1][i], Tuple(ndf.u[1][i+1]))))
+	end
+	u
+end
+
 # ╔═╡ 840b7534-79c6-457f-b541-0a5eb4b5f07b
 convert(NamedTuple, ndf)
+
+# ╔═╡ d2b76958-3b6b-46f2-ade8-27d5936d9f7a
+typeof(ndf.u[1])
 
 # ╔═╡ Cell order:
 # ╟─e953be75-6f32-4a33-bded-a809ff38e5cd
@@ -240,8 +301,7 @@ convert(NamedTuple, ndf)
 # ╠═2967add5-2c78-4b39-a055-174eac6daa3e
 # ╠═c3975028-9fef-415a-ac57-9256e8b65637
 # ╠═533dbca3-980c-41de-83e9-fbbab3728738
-# ╠═e192e46f-f650-4dd7-9811-e8255013d292
-# ╠═0d6684e4-b4fb-4418-8631-5a07dd60a612
+# ╠═e689523d-1bbb-43e7-a465-aa2dfc045c1f
 # ╠═ed833949-9eb3-496c-b822-9d84a365954b
 # ╠═ee603721-5c9c-4c77-a25b-aebdcff14d6d
 # ╠═f2d3031e-50ca-4b33-b7a4-b0f09f6f7919
@@ -251,11 +311,19 @@ convert(NamedTuple, ndf)
 # ╠═002780ce-41f1-4a6b-ab5a-3215093aa5c0
 # ╠═35fda755-069a-4236-b970-af6fe510ea16
 # ╠═f6c17840-e46a-488f-a5ba-028daf19346a
+# ╠═4a061441-e7b8-41c4-a965-4a916305ddb2
+# ╠═1a0dd4af-38af-4ad7-adb6-42b6a9ac96a9
 # ╠═6d7c6a69-013e-4f71-a038-45ada998fd60
 # ╠═cfe75faf-ba69-49e3-b58d-1ddf5f4b81fe
 # ╠═871f3e43-3fd1-4e54-bc84-b054a2c7f5b3
+# ╠═5fb59a29-1916-4070-acbd-b2449bd6dc33
 # ╠═b1467c24-8109-4a7c-a5e2-0749b8107918
 # ╠═d75d1fc7-620a-40bd-9171-ffcef06ce1aa
 # ╠═52084c1a-6db8-4c06-994e-0e0a9371c169
+# ╠═d8434058-1ce1-47c3-a842-1ba0901c9d52
+# ╠═996e0a83-66da-4b05-a141-6e9451595cb9
 # ╠═5cca3538-97f4-47d0-afa1-0bd95bf7f08e
+# ╠═b3e502df-7628-4fbe-b495-e7fcf843cf9c
+# ╠═1732c452-1e72-4512-82c5-7802cea325f1
 # ╠═840b7534-79c6-457f-b541-0a5eb4b5f07b
+# ╠═d2b76958-3b6b-46f2-ade8-27d5936d9f7a

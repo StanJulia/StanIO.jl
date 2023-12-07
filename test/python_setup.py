@@ -8,7 +8,7 @@ import sys; sys.path.append('/Users/rob/Library/Python/3.11/lib/site-packages')
 from stanio.stanio.csv import read_csv
 from stanio.stanio.reshape import *
 
-file='/Users/rob/.julia/dev/StanIO/data/test_data/test_data_chain_1.csv'
+file='/Users/rob/.julia/dev/StanIO/data/tup_03/tup_03_chain_1.csv'
 header, data = read_csv(file)
 header
 
