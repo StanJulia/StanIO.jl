@@ -130,7 +130,7 @@ function _from_header(hdr)
 			elseif !isnothing(findfirst(':', entry))
 				dims = Meta.parse.(split(entry, ":")[1] |> x -> split(x, ".")[2:end])
 				munged_header = map(_munge_first_tuple, entries[start_idx:i])
-				if !isnothing(findfirst(':', munged_header[1])) && length(dims) > 0
+				if length(dims) > 0
 					munged_header = munged_header[1:(Int(length(munged_header)/prod(dims)))]
 				end
 				var_type = TUPLE
@@ -157,22 +157,6 @@ function parse_header(header::Vector{String})
 	d
 end
 
-# ╔═╡ cfe75faf-ba69-49e3-b58d-1ddf5f4b81fe
-function dtype(v::Variable, top=true)
-	if v.type == Tuple
-		elts = [("$(i + 1)", dtype(p, false)) for (i, p) in enumerate(v.contents)]
-		dtype = dtype.(elts)
-	elseif v.type == Scalar
-		dtype = Number
-	end
-
-	if top
-		return dtype
-	else
-		return (dtype, v.dimensions)
-	end
-end
-
 # ╔═╡ 871f3e43-3fd1-4e54-bc84-b054a2c7f5b3
 function _extract_helper(v::Variable, df::DataFrame, offset=0)
 	the_start = v.start_idx + offset
@@ -195,9 +179,25 @@ function _extract_helper(v::Variable, df::DataFrame, offset=0)
 	end
 end
 
+# ╔═╡ cfe75faf-ba69-49e3-b58d-1ddf5f4b81fe
+function dtype(v::Variable, top=true)
+	if v.type == TUPLE
+		elts = [("$(i + 1)", dtype(p, false)) for (i, p) in enumerate(v.contents)]
+		println(elts)
+	end
+
+	if top
+		return dtype
+	else
+		return (dtype, v.dimensions)
+	end
+end
+
 # ╔═╡ b1467c24-8109-4a7c-a5e2-0749b8107918
-function extract_helper(v::Variable, df::DataFrame, offset=0)
-	return _extract_helper(v, df)
+function extract_helper(v::Variable, df::DataFrame, offset=0; object=true)
+
+	out = _extract_helper(v, df)
+	return out
 end
 
 # ╔═╡ d75d1fc7-620a-40bd-9171-ffcef06ce1aa
@@ -212,6 +212,21 @@ end
 # ╔═╡ 52084c1a-6db8-4c06-994e-0e0a9371c169
 dct = parse_header(names(df))
 
+# ╔═╡ 57daebe5-9f60-44d9-9dc6-0b0ce5ba816c
+a = dct["a"]
+
+# ╔═╡ c217c281-2f0f-48d7-bcfe-314afffe3275
+out = _extract_helper(a, df);
+
+# ╔═╡ 8c12e5ba-1f3d-424a-ba63-3d2344d79176
+out[1]
+
+# ╔═╡ 85df7728-a2e7-498b-9b84-b77c6bd0cdb9
+a.contents
+
+# ╔═╡ 1d0cd65e-ee9c-4e01-9a07-5af13ea8df73
+dtype(dct["a"])
+
 # ╔═╡ d8434058-1ce1-47c3-a842-1ba0901c9d52
 dct
 
@@ -219,56 +234,26 @@ dct
 stan = "
 generated quantities {
     real base = normal_rng(0, 1);
-    matrix[4, 5] m = to_matrix(linspaced_vector(20, 7, 11), 4, 5) * base;
-    array[2,3] tuple(array[2] tuple(real, array[2] real), matrix[4,5]) u =
-    {
+    array[3,2] tuple(real, array[2] real) a = 
         {
-            (
-                {(base, {base *2, base *3}), (base *4, {base*5, base*6})}, m
-            ),
-            (
-                {(base, {base *2, base *3}), (base *4, {base*5, base*6})}, m
-            ),
-            (
-                {(base, {base *2, base *3}), (base *4, {base*5, base*6})}, m
-            )
-        },
-        {
-            (
-                {(base, {base *2, base *3}), (base *4, {base*5, base*6})}, m
-            ),
-            (
-                {(base, {base *2, base *3}), (base *4, {base*5, base*6})}, m
-            ),
-            (
-                {(base, {base *2, base *3}), (base *4, {base*5, base*6})}, m
-            )
-        }
-    };
+            {(base * 12, {base * 13, base}), (base * 14, {base * 15, base})},
+            {(base * 16, {base * 17, base}), (base * 18, {base * 19, base})},
+            {(base * 20, {base * 21, base}), (base * 22, {base * 23, base})}
+        };
 }
 ";
-
 
 # ╔═╡ 5cca3538-97f4-47d0-afa1-0bd95bf7f08e
 ndf = stan_variables(dct, df)
 
 # ╔═╡ b3e502df-7628-4fbe-b495-e7fcf843cf9c
-ndf.u[1][1:2]
-
-# ╔═╡ 1732c452-1e72-4512-82c5-7802cea325f1
-begin
-	u = Tuple[]
-	for i in 1:2:length(ndf.u[1])
-		append!(u, tuple((ndf.u[1][i], Tuple(ndf.u[1][i+1]))))
-	end
-	u
-end
+ndf.a[1]
 
 # ╔═╡ 840b7534-79c6-457f-b541-0a5eb4b5f07b
 convert(NamedTuple, ndf)
 
 # ╔═╡ d2b76958-3b6b-46f2-ade8-27d5936d9f7a
-typeof(ndf.u[1])
+typeof(ndf.a[1])
 
 # ╔═╡ Cell order:
 # ╟─e953be75-6f32-4a33-bded-a809ff38e5cd
@@ -295,15 +280,19 @@ typeof(ndf.u[1])
 # ╠═f6c17840-e46a-488f-a5ba-028daf19346a
 # ╠═4a061441-e7b8-41c4-a965-4a916305ddb2
 # ╠═6d7c6a69-013e-4f71-a038-45ada998fd60
-# ╠═cfe75faf-ba69-49e3-b58d-1ddf5f4b81fe
 # ╠═871f3e43-3fd1-4e54-bc84-b054a2c7f5b3
+# ╠═cfe75faf-ba69-49e3-b58d-1ddf5f4b81fe
 # ╠═b1467c24-8109-4a7c-a5e2-0749b8107918
+# ╠═57daebe5-9f60-44d9-9dc6-0b0ce5ba816c
+# ╠═c217c281-2f0f-48d7-bcfe-314afffe3275
+# ╠═8c12e5ba-1f3d-424a-ba63-3d2344d79176
+# ╠═85df7728-a2e7-498b-9b84-b77c6bd0cdb9
+# ╠═1d0cd65e-ee9c-4e01-9a07-5af13ea8df73
 # ╠═d75d1fc7-620a-40bd-9171-ffcef06ce1aa
 # ╠═52084c1a-6db8-4c06-994e-0e0a9371c169
 # ╠═d8434058-1ce1-47c3-a842-1ba0901c9d52
 # ╠═996e0a83-66da-4b05-a141-6e9451595cb9
 # ╠═5cca3538-97f4-47d0-afa1-0bd95bf7f08e
 # ╠═b3e502df-7628-4fbe-b495-e7fcf843cf9c
-# ╠═1732c452-1e72-4512-82c5-7802cea325f1
 # ╠═840b7534-79c6-457f-b541-0a5eb4b5f07b
 # ╠═d2b76958-3b6b-46f2-ade8-27d5936d9f7a
