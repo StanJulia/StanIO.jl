@@ -1,7 +1,7 @@
 using StanIO, Test
 
-csvfiles = filter(x -> x[end-3:end] == ".csv", readdir(joinpath(stanio_data, "test_data")))
-csvfiles = joinpath.(joinpath(stanio_data, "test_data"), csvfiles)
+csvfiles = filter(x -> x[end-3:end] == ".csv", readdir(joinpath(stanio_data, "pure_01")))
+csvfiles = joinpath.(joinpath(stanio_data, "pure_01"), csvfiles)
 
 df = StanIO.read_csvfiles(csvfiles, :dataframe)
 df = df[:, 8:end]
