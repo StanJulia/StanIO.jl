@@ -31,7 +31,9 @@ end
 =#
 
 stanio_tests = [
-    "test_convert.jl",
+    "test_pure_01.jl",
+    "test_mixed_01.jl",
+    "test_mixed_02.jl",
 ]
 
 @testset "StanIO tests" begin

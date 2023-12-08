@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.32
+# v0.19.35
 
 using Markdown
 using InteractiveUtils
@@ -45,6 +45,40 @@ md" ###### Comment out below cell to use the packages from the Julia repository.
 
 # ╔═╡ ca0a71bb-7ac1-4c01-9a0a-24f1ce1479bd
 md" #### Setup dataframes for testing."
+
+# ╔═╡ 132fcda9-f6cc-4f88-a093-5594b541cc42
+stan = "
+generated quantities {
+    real base = normal_rng(0, 1);
+    matrix[4, 5] m = to_matrix(linspaced_vector(20, 7, 11), 4, 5) * base;
+    array[2,3] tuple(array[2] tuple(real, array[2] real), matrix[4,5]) u =
+    {
+        {
+            (
+                {(base, {base *2, base *3}), (base *4, {base*5, base*6})}, m
+            ),
+            (
+                {(base, {base *2, base *3}), (base *4, {base*5, base*6})}, m
+            ),
+            (
+                {(base, {base *2, base *3}), (base *4, {base*5, base*6})}, m
+            )
+        },
+        {
+            (
+                {(base, {base *2, base *3}), (base *4, {base*5, base*6})}, m
+            ),
+            (
+                {(base, {base *2, base *3}), (base *4, {base*5, base*6})}, m
+            ),
+            (
+                {(base, {base *2, base *3}), (base *4, {base*5, base*6})}, m
+            )
+        }
+    };
+}
+";
+
 
 # ╔═╡ 4e2984b1-435d-4cac-80ef-316060aa93af
 begin
@@ -118,8 +152,6 @@ end
 # ╔═╡ f6c17840-e46a-488f-a5ba-028daf19346a
 function _from_header(hdr)
 	header = String.(vcat(strip.(hdr), "__dummy"))
-	println()
-	println(header)
 	entries = header
 	params = Variable[]
 	var_type = SCALAR
@@ -128,26 +160,19 @@ function _from_header(hdr)
 	for i in 1:length(entries)-1
 		entry = entries[i]
 		next_name = _get_base_name(entries[i+1])
-		println([entry, name, next_name])
 		if next_name !== name
-			println()
 			if isnothing(findfirst(':', entry))
-				println("\nIn array section for $(entry)\n")
 				splt = split(entry, ".")[2:end]
 				dims = isnothing(splt) ? () : Meta.parse.(splt)
 				var_type = SCALAR
 				contents = Variable[]
 				append!(params, [Variable(name, start_idx, i+1, tuple(dims...), var_type, contents)])
 			elseif !isnothing(findfirst(':', entry))
-				println("\nIn tuple section for $(entry)\n")
 				dims = Meta.parse.(split(entry, ":")[1] |> x -> split(x, ".")[2:end])
-				println([dims, prod(dims), length(header)])
 				munged_header = map(_munge_first_tuple, entries[start_idx:i])
-				println(munged_header)
 				if length(dims) > 0
 					munged_header = munged_header[1:(Int(length(munged_header)/prod(dims)))]
 				end
-				println(munged_header)
 				var_type = TUPLE
 				append!(params, [Variable(name, start_idx, i+1, tuple(dims...), var_type, 
 					_from_header(munged_header))])
@@ -195,14 +220,10 @@ end
 function _extract_helper(v::Variable, df::DataFrame, offset=0)
 	the_start = v.start_idx + offset
 	the_end = v.end_idx - 1 + offset
-	println(v.name)
-	println([the_start, the_end, offset])
 	if v.type == SCALAR
 		if length(v.dimensions) == 0
-			println(Array([df[1, the_start]]))
 			return Array(df[:, the_start])
 		else
-			println(reshape(Array(df[1, the_start:the_end]), v.dimensions...))
 			return [reshape(Array(df[i, the_start:the_end]), v.dimensions...) for i in 1:size(df, 1)]
 		end
 	elseif v.type == TUPLE
@@ -213,28 +234,39 @@ function _extract_helper(v::Variable, df::DataFrame, offset=0)
 				elts = hcat(elts, _extract_helper(param, df, the_start + off))
 			end
 		end
-		println([Tuple(elts[i, 2:end]) for i in 1:nrow(df)])
 		return [Tuple(elts[i, 2:end]) for i in 1:nrow(df)]
 	end
 end
 
-# ╔═╡ 5fb59a29-1916-4070-acbd-b2449bd6dc33
-let
-	at = fill((1, 3, 4,), 3, 2)
-	at[2,2] = (1,2,5)
-	at
-end
-
 # ╔═╡ b1467c24-8109-4a7c-a5e2-0749b8107918
-function extract_helper(v::Variable, df::DataFrame, offset=0)
-	return _extract_helper(v, df)
+function extract_helper(v::Variable, df::DataFrame, offset=0; object=true)
+	out = _extract_helper(v, df)
+	if v.type == TUPLE
+		if v.type == TUPLE
+			atr = []
+			elts = [p -> p.dimensions == () ? (1,) : p.dimensions for p in v.contents]
+			for j in 1:length(out)
+				at = Tuple[]
+				for i in 1:length(elts):length(out[j])
+					append!(at, [(out[j][i], out[j][i+1],)])
+				end
+				if length(v.dimensions) > 0
+					append!(atr, [reshape(at, v.dimensions...)])
+				else
+					append!(atr, at)
+				end
+			end
+			return atr
+		end
+	else
+		return out
+	end
 end
 
 # ╔═╡ d75d1fc7-620a-40bd-9171-ffcef06ce1aa
 function stan_variables(dct::Dict{String, Variable}, df::DataFrame)
 	res = DataFrame()
 	for key in keys(dct)
-		println(key)
 		res[!, dct[key].name] = extract_helper(dct[key], df)
 	end
 	res
@@ -243,39 +275,14 @@ end
 # ╔═╡ 52084c1a-6db8-4c06-994e-0e0a9371c169
 dct = parse_header(names(df))
 
-# ╔═╡ 996e0a83-66da-4b05-a141-6e9451595cb9
-stan = "
-generated quantities {
-    real base = normal_rng(0, 1);
-    array[3,2] tuple(real, array[2] real) a = 
-        {
-            {(base * 12, {base * 13, base}), (base * 14, {base * 15, base})},
-            {(base * 16, {base * 17, base}), (base * 18, {base * 19, base})},
-            {(base * 20, {base * 21, base}), (base * 22, {base * 23, base})}
-        };
-}
-";
-
-# ╔═╡ 0734df5c-7cbc-48ea-a52d-72fe97ed14b6
-names(u_df)
-
-# ╔═╡ 4a6b0190-2371-4748-8ffb-8c056c926d86
-length(names(u_df))
-
 # ╔═╡ 3e8bf2c5-7e8e-41c8-b9c8-6be227be69fd
 dct["u"]
 
 # ╔═╡ 5cca3538-97f4-47d0-afa1-0bd95bf7f08e
 ndf = stan_variables(dct, df)
 
-# ╔═╡ 1732c452-1e72-4512-82c5-7802cea325f1
-begin
-	u = Tuple[]
-	for i in 1:2:length(ndf.u[1])
-		append!(u, tuple((ndf.u[1][i], Tuple(ndf.u[1][i+1]))))
-	end
-	u
-end
+# ╔═╡ 1ed77d9a-bc91-4659-ab21-fc6704634598
+ndf.u[1]
 
 # ╔═╡ 840b7534-79c6-457f-b541-0a5eb4b5f07b
 convert(NamedTuple, ndf)
@@ -293,6 +300,7 @@ typeof(ndf.u[1])
 # ╠═a1328860-a754-4eb8-9855-e18d9ab50c0c
 # ╠═ecf1f379-7774-4a41-928e-be10be1786b4
 # ╟─ca0a71bb-7ac1-4c01-9a0a-24f1ce1479bd
+# ╠═132fcda9-f6cc-4f88-a093-5594b541cc42
 # ╠═4e2984b1-435d-4cac-80ef-316060aa93af
 # ╠═78d5367b-542a-41b6-85da-fc616046dba4
 # ╠═2967add5-2c78-4b39-a055-174eac6daa3e
@@ -313,15 +321,11 @@ typeof(ndf.u[1])
 # ╠═6d7c6a69-013e-4f71-a038-45ada998fd60
 # ╠═cfe75faf-ba69-49e3-b58d-1ddf5f4b81fe
 # ╠═871f3e43-3fd1-4e54-bc84-b054a2c7f5b3
-# ╠═5fb59a29-1916-4070-acbd-b2449bd6dc33
 # ╠═b1467c24-8109-4a7c-a5e2-0749b8107918
 # ╠═d75d1fc7-620a-40bd-9171-ffcef06ce1aa
 # ╠═52084c1a-6db8-4c06-994e-0e0a9371c169
-# ╠═996e0a83-66da-4b05-a141-6e9451595cb9
-# ╠═0734df5c-7cbc-48ea-a52d-72fe97ed14b6
-# ╠═4a6b0190-2371-4748-8ffb-8c056c926d86
 # ╠═3e8bf2c5-7e8e-41c8-b9c8-6be227be69fd
 # ╠═5cca3538-97f4-47d0-afa1-0bd95bf7f08e
-# ╠═1732c452-1e72-4512-82c5-7802cea325f1
+# ╠═1ed77d9a-bc91-4659-ab21-fc6704634598
 # ╠═840b7534-79c6-457f-b541-0a5eb4b5f07b
 # ╠═d2b76958-3b6b-46f2-ade8-27d5936d9f7a

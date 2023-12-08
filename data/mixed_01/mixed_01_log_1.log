@@ -1,170 +1,174 @@
 method = sample (Default)
-method = sample (Default)
-  sample
   sample
     num_samples = 1000 (Default)
-    num_samples = 1000 (Default)
     num_warmup = 1000 (Default)
-    num_warmup = 1000 (Default)
-    save_warmup = 0 (Default)
     save_warmup = 0 (Default)
     thin = 1 (Default)
-method = sample (Default)
     adapt
-method = sample (Default)
-    thin = 1 (Default)
       engaged = 1 (Default)
-  sample
-  sample
-    adapt
+method = sample (Default)
       gamma = 0.050000 (Default)
+  sample
     num_samples = 1000 (Default)
-    num_samples = 1000 (Default)
-      engaged = 1 (Default)
+    num_warmup = 1000 (Default)
+method = sample (Default)
+    save_warmup = 0 (Default)
+  sample
+    thin = 1 (Default)
       delta = 0.800000 (Default)
+    adapt
+    num_samples = 1000 (Default)
+method = sample (Default)
+      engaged = 1 (Default)
     num_warmup = 1000 (Default)
-    num_warmup = 1000 (Default)
+  sample
       gamma = 0.050000 (Default)
+    save_warmup = 0 (Default)
+    num_samples = 1000 (Default)
       kappa = 0.750000 (Default)
-    save_warmup = 0 (Default)
-    save_warmup = 0 (Default)
-      delta = 0.800000 (Default)
     thin = 1 (Default)
+    num_warmup = 1000 (Default)
+      delta = 0.800000 (Default)
+    adapt
+    save_warmup = 0 (Default)
       t0 = 10.000000 (Default)
+      engaged = 1 (Default)
     thin = 1 (Default)
-    adapt
-    adapt
-      init_buffer = 75 (Default)
       kappa = 0.750000 (Default)
+      init_buffer = 75 (Default)
+    adapt
+      gamma = 0.050000 (Default)
       term_buffer = 50 (Default)
       engaged = 1 (Default)
-      engaged = 1 (Default)
-      window = 25 (Default)
       t0 = 10.000000 (Default)
-      gamma = 0.050000 (Default)
-      gamma = 0.050000 (Default)
-      init_buffer = 75 (Default)
+      window = 25 (Default)
       delta = 0.800000 (Default)
+      init_buffer = 75 (Default)
+      save_metric = 0 (Default)
+      gamma = 0.050000 (Default)
       term_buffer = 50 (Default)
     algorithm = hmc (Default)
-      delta = 0.800000 (Default)
-      window = 25 (Default)
+      kappa = 0.750000 (Default)
       hmc
-      kappa = 0.750000 (Default)
-      kappa = 0.750000 (Default)
-    algorithm = hmc (Default)
-      t0 = 10.000000 (Default)
+      window = 25 (Default)
+      delta = 0.800000 (Default)
         engine = nuts (Default)
-      hmc
+      save_metric = 0 (Default)
+      t0 = 10.000000 (Default)
           nuts
+    algorithm = hmc (Default)
       init_buffer = 75 (Default)
-      t0 = 10.000000 (Default)
-      term_buffer = 50 (Default)
             max_depth = 10 (Default)
-        engine = nuts (Default)
+      hmc
+      term_buffer = 50 (Default)
         metric = diag_e (Default)
+        engine = nuts (Default)
       window = 25 (Default)
+      kappa = 0.750000 (Default)
+          nuts
+      save_metric = 0 (Default)
         metric_file =  (Default)
-          nuts
-      init_buffer = 75 (Default)
-    algorithm = hmc (Default)
-        stepsize = 1.000000 (Default)
-      hmc
-      term_buffer = 50 (Default)
-        stepsize_jitter = 0.000000 (Default)
-      window = 25 (Default)
-        engine = nuts (Default)
             max_depth = 10 (Default)
+      t0 = 10.000000 (Default)
     algorithm = hmc (Default)
-          nuts
-      hmc
         metric = diag_e (Default)
+      init_buffer = 75 (Default)
+      hmc
+        stepsize = 1.000000 (Default)
+      term_buffer = 50 (Default)
+        engine = nuts (Default)
+        metric_file =  (Default)
+      window = 25 (Default)
+          nuts
+        stepsize_jitter = 0.000000 (Default)
+      save_metric = 0 (Default)
             max_depth = 10 (Default)
     num_chains = 1 (Default)
-        metric_file =  (Default)
+    algorithm = hmc (Default)
+        metric = diag_e (Default)
 id = 3
+      hmc
+        stepsize = 1.000000 (Default)
+data
         engine = nuts (Default)
-data
-        metric = diag_e (Default)
+        metric_file =  (Default)
+  file =  (Default)
           nuts
-        metric_file =  (Default)
-  file =  (Default)
+        stepsize_jitter = 0.000000 (Default)
+init = 2 (Default)
             max_depth = 10 (Default)
-init = 2 (Default)
-        stepsize = 1.000000 (Default)
 random
+    num_chains = 1 (Default)
         stepsize = 1.000000 (Default)
-  seed = 1270620533 (Default)
-        stepsize_jitter = 0.000000 (Default)
-output
-        metric = diag_e (Default)
-        stepsize_jitter = 0.000000 (Default)
-  file = /Users/rob/.julia/dev/StanIO/data/mixed_01/mixed_01_chain_3.csv
-    num_chains = 1 (Default)
-        metric_file =  (Default)
-    num_chains = 1 (Default)
-  diagnostic_file =  (Default)
+  seed = 1302539520 (Default)
 id = 2
-id = 1 (Default)
-        stepsize = 1.000000 (Default)
-data
-data
-  refresh = 100 (Default)
-  file =  (Default)
-  file =  (Default)
-init = 2 (Default)
-init = 2 (Default)
-random
-random
-  seed = 1270620533 (Default)
-  sig_figs = 6
+        metric = diag_e (Default)
 output
-  seed = 1270620533 (Default)
-  file = /Users/rob/.julia/dev/StanIO/data/mixed_01/mixed_01_chain_1.csv
-  profile_file = profile.csv (Default)
-  diagnostic_file =  (Default)
-output
-  save_cmdstan_config = 0 (Default)
-  refresh = 100 (Default)
+data
         stepsize_jitter = 0.000000 (Default)
-  file = /Users/rob/.julia/dev/StanIO/data/mixed_01/mixed_01_chain_2.csv
-  sig_figs = 6
-    num_chains = 1 (Default)
-id = 4
-num_threads = 1 (Default)
-data
-  profile_file = profile.csv (Default)
-
+        metric_file =  (Default)
   file =  (Default)
+    num_chains = 1 (Default)
+  file = /Users/rob/.julia/dev/StanIO/data/mixed_01/mixed_01_chain_3.csv
 init = 2 (Default)
-  diagnostic_file =  (Default)
+id = 1 (Default)
 random
-  seed = 1270620533 (Default)
+  diagnostic_file =  (Default)
+data
+  seed = 1302539520 (Default)
+  refresh = 100 (Default)
+  file =  (Default)
 output
+  sig_figs = 6
+init = 2 (Default)
+  profile_file = profile.csv (Default)
+random
+        stepsize = 1.000000 (Default)
+  save_cmdstan_config = 0 (Default)
+  seed = 1302539520 (Default)
+        stepsize_jitter = 0.000000 (Default)
+num_threads = 1 (Default)
+output
+    num_chains = 1 (Default)
+
+  file = /Users/rob/.julia/dev/StanIO/data/mixed_01/mixed_01_chain_2.csv
+id = 4
+data
+  diagnostic_file =  (Default)
+  file =  (Default)
+  refresh = 100 (Default)
+init = 2 (Default)
+random
+  sig_figs = 6
+  seed = 1302539520 (Default)
+  profile_file = profile.csv (Default)
+output
+  save_cmdstan_config = 0 (Default)
+  file = /Users/rob/.julia/dev/StanIO/data/mixed_01/mixed_01_chain_1.csv
+num_threads = 1 (Default)
   file = /Users/rob/.julia/dev/StanIO/data/mixed_01/mixed_01_chain_4.csv
+
+  diagnostic_file =  (Default)
   diagnostic_file =  (Default)
   refresh = 100 (Default)
-  save_cmdstan_config = 0 (Default)
   refresh = 100 (Default)
   sig_figs = 6
+  profile_file = profile.csv (Default)
+  save_cmdstan_config = 0 (Default)
   sig_figs = 6
-num_threads = 1 (Default)
   profile_file = profile.csv (Default)
-
-  save_cmdstan_config = 0 (Default)
-  profile_file = profile.csv (Default)
-num_threads = 1 (Default)
-
   save_cmdstan_config = 0 (Default)
 num_threads = 1 (Default)
 
-Model contains no parameters, running fixed_param sampler, no updates to Markov chain
-Model contains no parameters, running fixed_param sampler, no updates to Markov chain
-Iteration:   1 / 1000 [  0%]  (Sampling)
-Iteration:   1 / 1000 [  0%]  (Sampling)
+num_threads = 1 (Default)
+
 Model contains no parameters, running fixed_param sampler, no updates to Markov chain
 Iteration:   1 / 1000 [  0%]  (Sampling)
 Model contains no parameters, running fixed_param sampler, no updates to Markov chain
+Iteration:   1 / 1000 [  0%]  (Sampling)
+Model contains no parameters, running fixed_param sampler, no updates to Markov chain
+Model contains no parameters, running fixed_param sampler, no updates to Markov chain
+Iteration:   1 / 1000 [  0%]  (Sampling)
 Iteration:   1 / 1000 [  0%]  (Sampling)
 Iteration: 100 / 1000 [ 10%]  (Sampling)
 Iteration: 100 / 1000 [ 10%]  (Sampling)
@@ -203,26 +207,26 @@ Iteration: 900 / 1000 [ 90%]  (Sampling)
 Iteration: 900 / 1000 [ 90%]  (Sampling)
 Iteration: 900 / 1000 [ 90%]  (Sampling)
 Iteration: 1000 / 1000 [100%]  (Sampling)
+
+ Elapsed Time: 0 seconds (Warm-up)
+               0.027 seconds (Sampling)
+               0.027 seconds (Total)
+
 Iteration: 1000 / 1000 [100%]  (Sampling)
 
  Elapsed Time: 0 seconds (Warm-up)
-               0.021 seconds (Sampling)
-               0.021 seconds (Total)
+               0.027 seconds (Sampling)
+               0.027 seconds (Total)
 
 Iteration: 1000 / 1000 [100%]  (Sampling)
-
 Iteration: 1000 / 1000 [100%]  (Sampling)
- Elapsed Time: 0 seconds (Warm-up)
-               0.021 seconds (Sampling)
-               0.021 seconds (Total)
-
 
  Elapsed Time: 0 seconds (Warm-up)
-               0.021 seconds (Sampling)
-               0.021 seconds (Total)
+               0.028 seconds (Sampling)
+               0.028 seconds (Total)
 
 
  Elapsed Time: 0 seconds (Warm-up)
-               0.021 seconds (Sampling)
-               0.021 seconds (Total)
+               0.028 seconds (Sampling)
+               0.028 seconds (Total)
 

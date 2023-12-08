@@ -28,7 +28,7 @@ function select_nested_column(df::DataFrame, var::Union{Symbol, String})
     df[:, sel]
 end
 
-@enum VariableType SCALAR=1 COMPLEX TUPLE ARRAY
+@enum VariableType SCALAR=1 TUPLE
 
 """
 
@@ -115,6 +115,13 @@ function _from_header(hdr)
 end
 	
 
+function dtype(v::Variable, top=TRUE)
+	if v.type == TUPLE
+		elts = [("$(i + 1)", dtype(p, false)) for (i, p) in enumerate(v.contents)]
+	end
+	return elts
+end
+
 """
 
 $SIGNATURES
@@ -196,8 +203,28 @@ Returns
 
 Not exported.
 """
-function extract_helper(v::Variable, df::DataFrame, offset=0)
-	return _extract_helper(v, df)
+function extract_helper(v::Variable, df::DataFrame, offset=0; object=true)
+	out = _extract_helper(v, df)
+	if v.type == TUPLE
+		if v.type == TUPLE
+			atr = []
+			elts = [p -> p.dimensions == () ? (1,) : p.dimensions for p in v.contents]
+			for j in 1:length(out)
+				at = Tuple[]
+				for i in 1:length(elts):length(out[j])
+					append!(at, [(out[j][i], out[j][i+1],)])
+				end
+				if length(v.dimensions) > 0
+					append!(atr, [reshape(at, v.dimensions...)])
+				else
+					append!(atr, at)
+				end
+			end
+			return atr
+		end
+	else
+		return out
+	end
 end
 
 """
@@ -240,3 +267,6 @@ end
 export
 	parse_header,
 	stan_variables
+	Variable,
+	VariableType,
+	dtype

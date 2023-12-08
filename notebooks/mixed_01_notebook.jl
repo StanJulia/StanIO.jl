@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.32
+# v0.19.35
 
 using Markdown
 using InteractiveUtils
@@ -45,6 +45,22 @@ md" ###### Comment out below cell to use the packages from the Julia repository.
 
 # ╔═╡ ca0a71bb-7ac1-4c01-9a0a-24f1ce1479bd
 md" #### Setup dataframes for testing."
+
+# ╔═╡ 223159f3-c270-48f8-b5a4-c3e308d56970
+md" ###### Stan Language program used to generate the mixed_01 data."
+
+# ╔═╡ f5c0ae08-f47b-42f8-9039-1a4ac72cf892
+stan = "
+generated quantities {
+    real base = normal_rng(0, 1);
+    array[3,2] tuple(real, array[2] real) a = 
+        {
+            {(base * 12, {base * 13, base}), (base * 14, {base * 15, base})},
+            {(base * 16, {base * 17, base}), (base * 18, {base * 19, base})},
+            {(base * 20, {base * 21, base}), (base * 22, {base * 23, base})}
+        };
+}
+";
 
 # ╔═╡ 4e2984b1-435d-4cac-80ef-316060aa93af
 begin
@@ -195,10 +211,31 @@ end
 
 # ╔═╡ b1467c24-8109-4a7c-a5e2-0749b8107918
 function extract_helper(v::Variable, df::DataFrame, offset=0; object=true)
-
 	out = _extract_helper(v, df)
-	return out
+	if v.type == TUPLE
+		if v.type == TUPLE
+			atr = []
+			elts = [p -> p.dimensions == () ? (1,) : p.dimensions for p in v.contents]
+			for j in 1:length(out)
+				at = Tuple[]
+				for i in 1:length(elts):length(out[j])
+					append!(at, [(out[j][i], out[j][i+1],)])
+				end
+				#j < 2 && println(at)
+				append!(atr, [reshape(at, v.dimensions...)])
+			end
+			return atr
+		end
+	else
+		return out
+	end
 end
+
+# ╔═╡ 52084c1a-6db8-4c06-994e-0e0a9371c169
+dct = parse_header(names(df))
+
+# ╔═╡ acadb26e-98c6-4350-b3f0-ab5bf9d1504c
+res = extract_helper(dct["a"], df);
 
 # ╔═╡ d75d1fc7-620a-40bd-9171-ffcef06ce1aa
 function stan_variables(dct::Dict{String, Variable}, df::DataFrame)
@@ -208,40 +245,6 @@ function stan_variables(dct::Dict{String, Variable}, df::DataFrame)
 	end
 	res
 end
-
-# ╔═╡ 52084c1a-6db8-4c06-994e-0e0a9371c169
-dct = parse_header(names(df))
-
-# ╔═╡ 57daebe5-9f60-44d9-9dc6-0b0ce5ba816c
-a = dct["a"]
-
-# ╔═╡ c217c281-2f0f-48d7-bcfe-314afffe3275
-out = _extract_helper(a, df);
-
-# ╔═╡ 8c12e5ba-1f3d-424a-ba63-3d2344d79176
-out[1]
-
-# ╔═╡ 85df7728-a2e7-498b-9b84-b77c6bd0cdb9
-a.contents
-
-# ╔═╡ 1d0cd65e-ee9c-4e01-9a07-5af13ea8df73
-dtype(dct["a"])
-
-# ╔═╡ d8434058-1ce1-47c3-a842-1ba0901c9d52
-dct
-
-# ╔═╡ 996e0a83-66da-4b05-a141-6e9451595cb9
-stan = "
-generated quantities {
-    real base = normal_rng(0, 1);
-    array[3,2] tuple(real, array[2] real) a = 
-        {
-            {(base * 12, {base * 13, base}), (base * 14, {base * 15, base})},
-            {(base * 16, {base * 17, base}), (base * 18, {base * 19, base})},
-            {(base * 20, {base * 21, base}), (base * 22, {base * 23, base})}
-        };
-}
-";
 
 # ╔═╡ 5cca3538-97f4-47d0-afa1-0bd95bf7f08e
 ndf = stan_variables(dct, df)
@@ -265,6 +268,8 @@ typeof(ndf.a[1])
 # ╠═a1328860-a754-4eb8-9855-e18d9ab50c0c
 # ╠═ecf1f379-7774-4a41-928e-be10be1786b4
 # ╟─ca0a71bb-7ac1-4c01-9a0a-24f1ce1479bd
+# ╟─223159f3-c270-48f8-b5a4-c3e308d56970
+# ╠═f5c0ae08-f47b-42f8-9039-1a4ac72cf892
 # ╠═4e2984b1-435d-4cac-80ef-316060aa93af
 # ╠═78d5367b-542a-41b6-85da-fc616046dba4
 # ╠═2967add5-2c78-4b39-a055-174eac6daa3e
@@ -283,15 +288,9 @@ typeof(ndf.a[1])
 # ╠═871f3e43-3fd1-4e54-bc84-b054a2c7f5b3
 # ╠═cfe75faf-ba69-49e3-b58d-1ddf5f4b81fe
 # ╠═b1467c24-8109-4a7c-a5e2-0749b8107918
-# ╠═57daebe5-9f60-44d9-9dc6-0b0ce5ba816c
-# ╠═c217c281-2f0f-48d7-bcfe-314afffe3275
-# ╠═8c12e5ba-1f3d-424a-ba63-3d2344d79176
-# ╠═85df7728-a2e7-498b-9b84-b77c6bd0cdb9
-# ╠═1d0cd65e-ee9c-4e01-9a07-5af13ea8df73
-# ╠═d75d1fc7-620a-40bd-9171-ffcef06ce1aa
+# ╠═acadb26e-98c6-4350-b3f0-ab5bf9d1504c
 # ╠═52084c1a-6db8-4c06-994e-0e0a9371c169
-# ╠═d8434058-1ce1-47c3-a842-1ba0901c9d52
-# ╠═996e0a83-66da-4b05-a141-6e9451595cb9
+# ╠═d75d1fc7-620a-40bd-9171-ffcef06ce1aa
 # ╠═5cca3538-97f4-47d0-afa1-0bd95bf7f08e
 # ╠═b3e502df-7628-4fbe-b495-e7fcf843cf9c
 # ╠═840b7534-79c6-457f-b541-0a5eb4b5f07b
