@@ -12,12 +12,9 @@ Pkg.activate(expanduser("~/.julia/dev/StanIO"))
 
 # ╔═╡ ecf1f379-7774-4a41-928e-be10be1786b4
 begin
-	using StanIO
+	import StanIO: stanio_data, read_csvfiles, find_nested_columns, select_nested_column
 	using DataFrames
-	using JSON
-	using NamedTupleTools
 	using OrderedCollections
-	using DocStringExtensions: FIELDS, SIGNATURES, TYPEDEF
 end
 
 # ╔═╡ e953be75-6f32-4a33-bded-a809ff38e5cd
@@ -55,24 +52,24 @@ end
 
 # ╔═╡ 78d5367b-542a-41b6-85da-fc616046dba4
 begin
- 	df = StanIO.read_csvfiles(csvfiles, :dataframe)
+ 	df = read_csvfiles(csvfiles, :dataframe)
 	#df = df[:, 8:end]
  end
 
 # ╔═╡ 2967add5-2c78-4b39-a055-174eac6daa3e
-a3d, col_names = StanIO.read_csvfiles(csvfiles, :array; return_parameters=true);
+a3d, col_names = read_csvfiles(csvfiles, :array; return_parameters=true);
 
 # ╔═╡ c3975028-9fef-415a-ac57-9256e8b65637
-StanIO.find_nested_columns(df)
+find_nested_columns(df)
 
 # ╔═╡ 533dbca3-980c-41de-83e9-fbbab3728738
-x_df = StanIO.select_nested_column(df, :x)
+x_df = select_nested_column(df, :x)
 
 # ╔═╡ e192e46f-f650-4dd7-9811-e8255013d292
-bar3_df = StanIO.select_nested_column(df, "bar3")
+bar3_df = select_nested_column(df, "bar3")
 
 # ╔═╡ 0d6684e4-b4fb-4418-8631-5a07dd60a612
-bar_df = StanIO.select_nested_column(df, "bar")
+bar_df = select_nested_column(df, "bar")
 
 # ╔═╡ ed833949-9eb3-496c-b822-9d84a365954b
 @enum VariableType SCALAR=1 COMPLEX TUPLE ARRAY

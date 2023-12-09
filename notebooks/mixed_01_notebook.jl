@@ -11,13 +11,7 @@ using Pkg
 Pkg.activate(expanduser("~/.julia/dev/StanIO"))
 
 # ╔═╡ ecf1f379-7774-4a41-928e-be10be1786b4
-begin
-	using StanIO
-	using DataFrames
-	using JSON
-	using NamedTupleTools
-	using DocStringExtensions: FIELDS, SIGNATURES, TYPEDEF
-end
+using StanIO
 
 # ╔═╡ 789c3f0b-8179-4126-baf5-fdd47b1938f5
 md" ##### Widen the cells."
