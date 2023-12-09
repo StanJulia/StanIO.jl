@@ -34,6 +34,7 @@ stanio_tests = [
     "test_pure_01.jl",
     "test_mixed_01.jl",
     "test_mixed_02.jl",
+    "test_ultimate.jl",
 ]
 
 @testset "StanIO tests" begin
