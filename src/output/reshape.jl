@@ -128,7 +128,7 @@ $SIGNATURES
 
 Given a comma-separated list of names of Stan outputs, like
 that from the header row of a CSV file, parse it into a 
-dictionary of `Variable` objects.
+(ordered) dictionary of `Variable` objects.
 
 Parameters
 ----------
@@ -140,14 +140,14 @@ header::Vector{String}
 
 Returns
 -------
-Dict[String, Variable]
+OrderedDict[String, Variable]
 
     A dictionary mapping the base name of each variable to a struct `Variable`.
 
 Exported.
 """
 function parse_header(header::Vector{String})
-	d = Dict{String, Variable}()
+	d = OrderedDict{String, Variable}()
 	for param in _from_header(header)
 		d[param.name] = param
 	end
@@ -220,7 +220,7 @@ function extract_helper(v::Variable, df::DataFrame, offset=0; object=true)
 					append!(atr, at)
 				end
 			end
-			return atr
+			return convert.(typeof(atr[1]), atr)
 		end
 	else
 		return out
@@ -237,7 +237,7 @@ and reshape them to the correct dimensions.
 
 Parameters
 ----------
-parameters::Dict{String, Variable}
+parameters::OrderedDict{String, Variable}
 
     A dictionary of `Variable` objects, 
     like that returned by `parse_header()`.
@@ -256,7 +256,7 @@ Returns
 
 Exported.
 """
-function stan_variables(dct::Dict{String, Variable}, df::DataFrame)
+function stan_variables(dct::OrderedDict{String, Variable}, df::DataFrame)
 	res = DataFrame()
 	for key in keys(dct)
 		res[!, dct[key].name] = extract_helper(dct[key], df)

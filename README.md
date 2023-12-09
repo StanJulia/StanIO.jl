@@ -18,6 +18,6 @@ This package is related to similar [work in python by Brian Ward](https://github
 
 Currently it converts Stan .csv files (including .csv files with complex variables, rectangular arrays and tuples) to DataFrames and to NamedTuples (using `convert(NamedTuple, df)`).
 
-Please see this [stanio_example.jl Pluto notebook](https://github.com/StanJulia/StanExampleNotebooks.jl/blob/main/notebooks/StanIO/stanio_example.jl) or [this test script](https://github.com/StanJulia/StanIO.jl/blob/main/test/test_convert.jl) for examples.
+Please see this [stanio_example.jl Pluto notebook](https://github.com/StanJulia/StanExampleNotebooks.jl/blob/main/notebooks/StanIO/stanio_example.jl) or [this test script](https://github.com/StanJulia/StanIO.jl/blob/main/test/test_pure_01.jl) for examples.
 
-Note: Initial version of handling mixed tuples needs! YMMV!
+Note: Initial version of handling mixed tuples. YMMV!

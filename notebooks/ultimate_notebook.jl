@@ -19,12 +19,6 @@ begin
 	using DocStringExtensions: FIELDS, SIGNATURES, TYPEDEF
 end
 
-# ╔═╡ e953be75-6f32-4a33-bded-a809ff38e5cd
-md" ### Translation of [stanio](https://github.com/WardBrian/stanio) by Brian Ward."
-
-# ╔═╡ d3fb7f48-bbec-48f8-bebc-a53a89e27716
-md" ###### This notebook 'duplicates' the methods available in StanIO."
-
 # ╔═╡ 789c3f0b-8179-4126-baf5-fdd47b1938f5
 md" ##### Widen the cells."
 
@@ -82,8 +76,6 @@ convert(NamedTuple, ndf)
 typeof(ndf.ultimate[1])
 
 # ╔═╡ Cell order:
-# ╟─e953be75-6f32-4a33-bded-a809ff38e5cd
-# ╟─d3fb7f48-bbec-48f8-bebc-a53a89e27716
 # ╟─789c3f0b-8179-4126-baf5-fdd47b1938f5
 # ╠═c08d0f35-92fb-4e10-81a6-5a68eea4d046
 # ╠═3d7c5e2c-8eba-11ee-02c7-5382f0852ca2

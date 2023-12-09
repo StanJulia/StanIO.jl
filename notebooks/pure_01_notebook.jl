@@ -16,6 +16,7 @@ begin
 	using DataFrames
 	using JSON
 	using NamedTupleTools
+	using OrderedCollections
 	using DocStringExtensions: FIELDS, SIGNATURES, TYPEDEF
 end
 
@@ -55,7 +56,7 @@ end
 # ╔═╡ 78d5367b-542a-41b6-85da-fc616046dba4
 begin
  	df = StanIO.read_csvfiles(csvfiles, :dataframe)
-	df = df[:, 8:end]
+	#df = df[:, 8:end]
  end
 
 # ╔═╡ 2967add5-2c78-4b39-a055-174eac6daa3e
@@ -157,7 +158,7 @@ end
 
 # ╔═╡ 6d7c6a69-013e-4f71-a038-45ada998fd60
 function parse_header(header::Vector{String})
-	d = Dict{String, Variable}()
+	d = OrderedDict{String, Variable}()
 	for param in _from_header(header)
 		d[param.name] = param
 	end
@@ -220,7 +221,7 @@ function extract_helper(v::Variable, df::DataFrame, offset=0; object=true)
 					append!(atr, at)
 				end
 			end
-			return atr
+			return convert.(typeof(atr[1]), atr)
 		end
 	else
 		return out
@@ -228,7 +229,7 @@ function extract_helper(v::Variable, df::DataFrame, offset=0; object=true)
 end
 
 # ╔═╡ d75d1fc7-620a-40bd-9171-ffcef06ce1aa
-function stan_variables(dct::Dict{String, Variable}, df::DataFrame)
+function stan_variables(dct::OrderedDict{String, Variable}, df::DataFrame)
 	res = DataFrame()
 	for key in keys(dct)
 		res[!, dct[key].name] = extract_helper(dct[key], df)
