@@ -18,10 +18,10 @@ begin
 end
 
 # ╔═╡ e953be75-6f32-4a33-bded-a809ff38e5cd
-md" ### Translation of [stanio](https://github.com/WardBrian/stanio) by Brian Ward."
+md" ### Notebook version of translation of [`stanio/reshape.yp`](https://github.com/WardBrian/stanio) by Brian Ward."
 
 # ╔═╡ d3fb7f48-bbec-48f8-bebc-a53a89e27716
-md" ###### This notebook 'duplicates' the methods available in StanIO."
+md" ###### For testing purposes, this notebook 'duplicates' the methods available in StanIO."
 
 # ╔═╡ 789c3f0b-8179-4126-baf5-fdd47b1938f5
 md" ##### Widen the cells."
