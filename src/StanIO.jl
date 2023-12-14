@@ -18,7 +18,6 @@ include("samples/convert_a3d.jl")
 
 include("output/dataframes.jl")
 include("output/namedtuples.jl")
-#include("output/nesteddataframe.jl")
 include("output/reshape.jl")
 
 const stanio_dir = @__DIR__
@@ -26,6 +25,9 @@ const stanio_data = joinpath(stanio_dir, "..", "data")
 
 export
     stanio_dir,
-    stanio_data
+    stanio_data,
+    read_csvfiles,
+    parse_header,
+    stan_variables
 
 end # module

@@ -263,10 +263,3 @@ function stan_variables(dct::OrderedDict{String, Variable}, df::DataFrame)
 	end
 	res
 end
-
-export
-	parse_header,
-	stan_variables
-	Variable,
-	VariableType,
-	dtype
