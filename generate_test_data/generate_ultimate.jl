@@ -51,8 +51,8 @@ generated quantities {
  }
 ";
 
-tmpdir = joinpath("/Users", "rob", ".julia", "dev", "StanIO", "data", "brian_data")
-sm = SampleModel("brian_data", stan, tmpdir)
+tmpdir = joinpath("/Users", "rob", ".julia", "dev", "StanIO", "data", "ultimate")
+sm = SampleModel("ultimate", stan, tmpdir)
 rc = stan_sample(sm)
 
 chns, col_names = read_samples(sm, :array; return_parameters=true);
