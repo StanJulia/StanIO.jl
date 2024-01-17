@@ -1,5 +1,5 @@
 function convert_matrices(d::Union{NamedTuple, Dict})
-    dct = typeof(d) <: NamedTuple ? dct = convert(Dict, d) : d
+    dct = typeof(d) <: NamedTuple ? dct = convert(Dict, d) : deepcopy(d)
     for key in keys(dct)
         if typeof(dct[key]) <: Array
             dct[key] = permutedims(dct[key], length(size(dct[key])):-1:1)
