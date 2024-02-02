@@ -15,6 +15,7 @@ include("input/update_json_files.jl")
 
 include("samples/read_csvfiles.jl")
 include("samples/convert_a3d.jl")
+include("samples/extract_reshape.jl")
 
 include("output/dataframes.jl")
 include("output/namedtuples.jl")
@@ -28,6 +29,7 @@ export
     stanio_data,
     read_csvfiles,
     parse_header,
-    stan_variables
+    stan_variables,
+    extract_reshape
 
 end # module

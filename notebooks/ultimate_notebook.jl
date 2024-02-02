@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.35
+# v0.19.37
 
 using Markdown
 using InteractiveUtils
@@ -75,6 +75,12 @@ convert(NamedTuple, ndf)
 # ╔═╡ d2b76958-3b6b-46f2-ade8-27d5936d9f7a
 typeof(ndf.ultimate[1])
 
+# ╔═╡ 491fd7ee-e8dd-4ba9-b60d-337dc04b3db5
+names(ndf)
+
+# ╔═╡ 84903520-0184-4ff4-ad11-92efebca7577
+ndf.arr_very_nested
+
 # ╔═╡ Cell order:
 # ╟─789c3f0b-8179-4126-baf5-fdd47b1938f5
 # ╠═c08d0f35-92fb-4e10-81a6-5a68eea4d046
@@ -93,3 +99,5 @@ typeof(ndf.ultimate[1])
 # ╠═b3e502df-7628-4fbe-b495-e7fcf843cf9c
 # ╠═840b7534-79c6-457f-b541-0a5eb4b5f07b
 # ╠═d2b76958-3b6b-46f2-ade8-27d5936d9f7a
+# ╠═491fd7ee-e8dd-4ba9-b60d-337dc04b3db5
+# ╠═84903520-0184-4ff4-ad11-92efebca7577
