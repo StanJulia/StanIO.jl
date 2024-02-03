@@ -8,6 +8,7 @@
 [project-status-img]: https://img.shields.io/badge/lifecycle-experimental-orange.svg
 [CI]:https://github.com/StanJulia/StanIO.jl/actions/workflows/CI.yml/badge.svg
 
+
 ## Purpose
 
 A number of extensions to the Stan Programming Language have been proposed (see [Bob Carpenter](https://statmodeling.stat.columbia.edu/wp-content/uploads/2021/10/carpenter-probprog2021.pdf)).
@@ -16,7 +17,8 @@ StanIO.jl will track the consequences of these changes in both input and output 
 
 This package is related to similar [work in python by Brian Ward](https://github.com/WardBrian/stanio). Handling of tuples is based on Brian's reshape.py.
 
-Currently it converts Stan .csv files (including .csv files with complex variables, rectangular arrays, tuples and mixed tuples and arrays) to DataFrames and to NamedTuples (using `convert(NamedTuple, df)`).
+Currently it converts nested variables in Stan .csv files (including .csv files with complex variables, rectangular arrays, tuples and mixed tuples and arrays) to an array using `extract_reshape()`.
+
 
 ## Usage
 
@@ -39,9 +41,9 @@ b[1, 1, :, :]
 
 In StanSample.jl the nested array functionality is available as:
 ```
-ndf = read_samples(sm, :nesteddataframe)
+ndf = read_samples(sm, :nesteddataframe) # sm is a StanSampleModel.
 ```
 
-## Examples
+## Further examples
 
-Please see this [stanio_example.jl Pluto notebook](https://github.com/StanJulia/StanExampleNotebooks.jl/blob/main/notebooks/StanIO/stanio_example.jl) or [these test script](https://github.com/StanJulia/StanIO.jl/blob/main/test) for examples.
+Please see this [stanio_example.jl Pluto notebook](https://github.com/StanJulia/StanExampleNotebooks.jl/blob/main/notebooks/StanIO/stanio_example.jl) or [these test scripts](https://github.com/StanJulia/StanIO.jl/blob/main/test) for examples.
