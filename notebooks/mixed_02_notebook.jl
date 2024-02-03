@@ -14,6 +14,7 @@ Pkg.activate(expanduser("~/.julia/dev/StanIO"))
 begin
 	using StanIO
 	using Statistics
+	using SplitApplyCombine
 end
 
 # ╔═╡ 789c3f0b-8179-4126-baf5-fdd47b1938f5
@@ -191,6 +192,21 @@ u[1, 1]
 # ╔═╡ d1afd4d1-981a-4fe6-b0c0-3beb41682086
 u2 = extract_reshape(csvfiles, :u; nested=false);
 
+# ╔═╡ c53143ee-12a3-4432-ba7a-5e7537bdfdc3
+m2 = extract_reshape(csvfiles, :m; nested=false);
+
+# ╔═╡ dd912bc3-c61c-4b94-8541-cd03ac69ab40
+m2[1, 1, :, :]
+
+# ╔═╡ 66c46fcf-66b6-4ce1-a819-d6962581f5f9
+m2[1000, 4, :, :]
+
+# ╔═╡ 3b5fec71-a9e2-40b2-90b3-2b1ec53a6aaf
+m2[1, 1, :, :] == c[1, 1, :, :]
+
+# ╔═╡ 610d5b24-0a3f-4a18-8888-5c226953b937
+m2[1000, 4, :, :] == c[1000, 4, :, :]
+
 # ╔═╡ Cell order:
 # ╟─789c3f0b-8179-4126-baf5-fdd47b1938f5
 # ╠═c08d0f35-92fb-4e10-81a6-5a68eea4d046
@@ -238,3 +254,8 @@ u2 = extract_reshape(csvfiles, :u; nested=false);
 # ╠═7eb4fdd4-b070-498d-919f-b9461b4ad910
 # ╠═90b134e6-2583-47cb-8644-dfd0f5af1b98
 # ╠═d1afd4d1-981a-4fe6-b0c0-3beb41682086
+# ╠═c53143ee-12a3-4432-ba7a-5e7537bdfdc3
+# ╠═dd912bc3-c61c-4b94-8541-cd03ac69ab40
+# ╠═66c46fcf-66b6-4ce1-a819-d6962581f5f9
+# ╠═3b5fec71-a9e2-40b2-90b3-2b1ec53a6aaf
+# ╠═610d5b24-0a3f-4a18-8888-5c226953b937

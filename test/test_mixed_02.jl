@@ -1,4 +1,5 @@
-using StanIO, Test
+using StanIO
+using Test
 
 csvfiles = filter(x -> x[end-3:end] == ".csv", readdir(joinpath(stanio_data, "mixed_02")))
 csvfiles = joinpath.(joinpath(stanio_data, "mixed_02"), csvfiles)

@@ -33,26 +33,17 @@ function extract_reshape(csvfiles, var::Union{String, Symbol}; nested=true)
         df = StanIO.select_nested_column(df, var)
         dct = parse_header(names(df))
         ndf = stan_variables(dct, df)
+        res = reshape(Array(ndf), (nsamples, nchains))
     end
     if nested
-        return reshape(Array(ndf), (nsamples, nchains))
+        return res
     else
         if typeof(ndf[1, var]) == Matrix{Tuple}
             @warn "Non-nested tuples not supported in `extract_reshape()`."
             return nothing
         end
-        dims = (nsamples, nchains, size(ndf[1, var])...)
-        a = zeros(dims...)
-        el = Array(StanIO.select_nested_column(df, :m))
-        for i in 1:nsamples
-            for j in 1:nchains
-                for k = 1:size(ndf[1, var], 1)
-                    for l = 1:size(ndf[1, var], 2)
-                        a[i, j, k, l] = el[i + (j-1)*1000, :][k + (l-1)*4]
-                    end
-                end
-            end
-        end
+        a = combinedims(res)
+        a = permutedims(a, (3, 4, 1, 2))
         return a
     end
 end

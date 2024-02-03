@@ -18,4 +18,30 @@ This package is related to similar [work in python by Brian Ward](https://github
 
 Currently it converts Stan .csv files (including .csv files with complex variables, rectangular arrays, tuples and mixed tuples and arrays) to DataFrames and to NamedTuples (using `convert(NamedTuple, df)`).
 
-Please see this [stanio_example.jl Pluto notebook](https://github.com/StanJulia/StanExampleNotebooks.jl/blob/main/notebooks/StanIO/stanio_example.jl) or [this test script](https://github.com/StanJulia/StanIO.jl/blob/main/test/test_pure_01.jl) for examples.
+## Usage
+
+```julia
+using StanIO
+
+# Define an array of names of Stan .csv file
+
+csvfiles = filter(x -> x[end-3:end] == ".csv", readdir(joinpath(stanio_data, "mixed_02")))
+csvfiles = joinpath.(joinpath(stanio_data, "mixed_02"), csvfiles)
+
+a = extract_reshape(csvfiles, "m"); # Returns a nested 2D array [nsamples, nchains] of m
+a[1, 1]
+
+# or
+
+b = extract_reshape(csvfiles, "m"; nested=false); # for a single array
+b[1, 1, :, :]
+```
+
+In StanSample.jl the nested array functionality is available as:
+```
+ndf = read_samples(sm, :nesteddataframe)
+```
+
+## Examples
+
+Please see this [stanio_example.jl Pluto notebook](https://github.com/StanJulia/StanExampleNotebooks.jl/blob/main/notebooks/StanIO/stanio_example.jl) or [these test script](https://github.com/StanJulia/StanIO.jl/blob/main/test) for examples.

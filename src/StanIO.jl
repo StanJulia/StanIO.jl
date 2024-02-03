@@ -8,7 +8,7 @@ module StanIO
 using DocStringExtensions: FIELDS, SIGNATURES, TYPEDEF
 using Unicode, DelimitedFiles, OrderedCollections
 using DataFrames, CSV, Parameters, NamedTupleTools
-using JSON
+using JSON, SplitApplyCombine
 
 include("input/update_model_file.jl")
 include("input/update_json_files.jl")
