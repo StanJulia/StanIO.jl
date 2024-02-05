@@ -207,6 +207,44 @@ m2[1, 1, :, :] == c[1, 1, :, :]
 # ╔═╡ 610d5b24-0a3f-4a18-8888-5c226953b937
 m2[1000, 4, :, :] == c[1000, 4, :, :]
 
+# ╔═╡ b0061998-41a8-4d56-929c-007ab19b9a19
+function extract_reshape2(a3d, col_names, var::Union{String, Symbol}; nested=true)
+    df = StanIO.convert_a3d(a3d, col_names, Val(:dataframe))
+    nchains = length(csvfiles)
+    nsamples = Int(size(df, 1) / nchains)
+    if !(String(var) in StanIO.find_nested_columns(df))
+        if String(var) in names(df)
+            return reshape(df[!, var], (nsamples, nchains))
+        else
+            @warn "Variable $var is not found the .csv files."
+            return nothing
+        end
+    else
+        df = StanIO.select_nested_column(df, var)
+        dct = parse_header(names(df))
+        ndf = stan_variables(dct, df)
+        res = reshape(Array(ndf), (nsamples, nchains))
+    end
+    if nested
+        return res
+    else
+        if typeof(ndf[1, var]) == Matrix{Tuple}
+            @warn "Non-nested tuples not supported in `extract_reshape()`."
+            return nothing
+        end
+        a = combinedims(res)
+        a = permutedims(a, (3, 4, 1, 2))
+        return a
+    end
+end
+
+
+# ╔═╡ 05e4a5d4-110b-444a-9590-4d147969e15b
+d = extract_reshape2(a3d, col_names, :m)
+
+# ╔═╡ 89af7b46-7532-429e-9712-bd0e68868b4a
+d[1]
+
 # ╔═╡ Cell order:
 # ╟─789c3f0b-8179-4126-baf5-fdd47b1938f5
 # ╠═c08d0f35-92fb-4e10-81a6-5a68eea4d046
@@ -259,3 +297,6 @@ m2[1000, 4, :, :] == c[1000, 4, :, :]
 # ╠═66c46fcf-66b6-4ce1-a819-d6962581f5f9
 # ╠═3b5fec71-a9e2-40b2-90b3-2b1ec53a6aaf
 # ╠═610d5b24-0a3f-4a18-8888-5c226953b937
+# ╠═b0061998-41a8-4d56-929c-007ab19b9a19
+# ╠═05e4a5d4-110b-444a-9590-4d147969e15b
+# ╠═89af7b46-7532-429e-9712-bd0e68868b4a
